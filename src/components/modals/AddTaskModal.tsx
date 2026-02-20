@@ -3,7 +3,7 @@ import Modal from "../ui/Modal";
 import Button from "../ui/Button";
 import ColorPicker from "../ui/ColorPicker";
 import TimePicker from "../ui/TimePicker";
-import type { Day, Task, ScheduleSettings } from "../../lib/types";
+import type { Day, Task } from "../../lib/types";
 import { DAY_SHORT_LABELS, ALL_DAYS } from "../../lib/types";
 import { DEFAULT_TASK_COLOR } from "../../lib/colors";
 import { useScheduleStore, useAppSettingsStore } from "../../store/scheduleStore";

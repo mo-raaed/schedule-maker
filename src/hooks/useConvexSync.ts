@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "convex/react";
 import { useAuth } from "@clerk/clerk-react";
 import { api } from "../../convex/_generated/api";
 import { useScheduleStore } from "../store/scheduleStore";
-import type { Schedule, Task, ScheduleSettings } from "../lib/types";
+import type { Schedule } from "../lib/types";
 import { DEFAULT_SETTINGS } from "../lib/types";
 
 /**
@@ -20,10 +20,8 @@ export function useConvexSync() {
   const { isSignedIn } = useAuth();
   const hasSynced = useRef(false);
 
-  const schedules = useScheduleStore((s) => s.schedules);
   const setSchedules = useScheduleStore((s) => s.setSchedules);
   const markSynced = useScheduleStore((s) => s.markSynced);
-  const setActiveSchedule = useScheduleStore((s) => s.setActiveSchedule);
 
   // Convex queries/mutations
   const mySchedules = useQuery(

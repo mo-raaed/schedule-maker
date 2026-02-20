@@ -5,8 +5,6 @@ import { useScheduleStore } from "../../store/scheduleStore";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Link2, Copy, Check, Upload, Download, Globe, GlobeLock } from "lucide-react";
-import type { Schedule, Task } from "../../lib/types";
-import { DEFAULT_SETTINGS } from "../../lib/types";
 
 // ─── Share Modal ────────────────────────────────────────────────────
 

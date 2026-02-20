@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   DndContext,
   type DragEndEvent,
@@ -171,7 +171,7 @@ export default function WeeklyGrid({
           >
             {/* Time labels column */}
             <div className="border-r border-border" style={{ height: totalHeight }}>
-              {timeSlots.map((time, i) => (
+              {timeSlots.map((time) => (
                 <div
                   key={time}
                   className="flex items-start justify-end pr-2 text-xs text-muted-foreground"
@@ -268,8 +268,6 @@ function DayColumn({
         <DroppableCell
           key={`${day}-${time}`}
           id={`cell-${day}-${time}`}
-          day={day}
-          time={time}
           height={ROW_HEIGHT}
           onClick={() => onCellClick?.(day, time)}
           readOnly={readOnly}
@@ -304,14 +302,12 @@ function DayColumn({
 
 interface DroppableCellProps {
   id: string;
-  day: Day;
-  time: string;
   height: number;
   onClick: () => void;
   readOnly: boolean;
 }
 
-function DroppableCell({ id, day, time, height, onClick, readOnly }: DroppableCellProps) {
+function DroppableCell({ id, height, onClick, readOnly }: DroppableCellProps) {
   const { setNodeRef, isOver } = useDroppable({ id });
 
   return (

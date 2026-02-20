@@ -29,7 +29,6 @@ import type { Day, Task } from "./lib/types";
 // ─── Main Builder View ──────────────────────────────────────────────
 
 export default function ScheduleBuilder() {
-  const schedule = useScheduleStore((s) => s.getActiveSchedule());
   const schedules = useScheduleStore((s) => s.schedules);
   const createSchedule = useScheduleStore((s) => s.createSchedule);
   const darkMode = useAppSettingsStore((s) => s.darkMode);

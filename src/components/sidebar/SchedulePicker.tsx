@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useScheduleStore } from "../../store/scheduleStore";
-import { ChevronDown, Plus, Trash2, Copy, Check, Pencil } from "lucide-react";
+import { ChevronDown, Plus, Trash2, Copy, Pencil } from "lucide-react";
 
 export default function SchedulePicker() {
   const schedules = useScheduleStore((s) => s.schedules);

@@ -1,5 +1,5 @@
 import { Check } from "lucide-react";
-import { COLOR_PALETTE, type ColorOption } from "../../lib/colors";
+import { COLOR_PALETTE } from "../../lib/colors";
 import type { PaletteMode } from "../../lib/types";
 
 interface ColorPickerProps {

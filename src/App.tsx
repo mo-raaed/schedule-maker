@@ -1,17 +1,14 @@
-import { Authenticated, Unauthenticated, useMutation, useQuery } from "convex/react";
+import { Authenticated, Unauthenticated, useMutation } from "convex/react";
 import { useEffect, useState } from "react";
 import { api } from "../convex/_generated/api";
 import {
   SignInButton,
-  SignUpButton,
-  UserButton,
 } from "@clerk/clerk-react";
 import { Calendar, ArrowRight } from "lucide-react";
 import ScheduleBuilder from "./ScheduleBuilder";
-import { useAppSettingsStore, useScheduleStore } from "./store/scheduleStore";
+import { useAppSettingsStore } from "./store/scheduleStore";
 import SharedScheduleView from "./SharedScheduleView";
 import { useConvexSync } from "./hooks/useConvexSync";
-import Button from "./components/ui/Button";
 
 export default function App() {
   const darkMode = useAppSettingsStore((s) => s.darkMode);
