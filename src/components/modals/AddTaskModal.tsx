@@ -7,7 +7,7 @@ import type { Day, Task } from "../../lib/types";
 import { DAY_SHORT_LABELS, ALL_DAYS } from "../../lib/types";
 import { DEFAULT_TASK_COLOR } from "../../lib/colors";
 import { useScheduleStore, useAppSettingsStore } from "../../store/scheduleStore";
-import { getVisibleDays } from "../../lib/time";
+import { getWeekOrder } from "../../lib/time";
 import { Trash2 } from "lucide-react";
 
 interface AddTaskModalProps {
@@ -106,7 +106,7 @@ export default function AddTaskModal({
     }
   };
 
-  const visibleDays = settings ? getVisibleDays(settings) : ALL_DAYS.filter((d) => d !== "sat" && d !== "sun");
+  const visibleDays = settings ? getWeekOrder(settings.startOfWeek) : ALL_DAYS;
   const isValid = name.trim().length > 0 && selectedDays.length > 0;
 
   return (

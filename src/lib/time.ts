@@ -45,6 +45,15 @@ export function generateTimeSlots(settings: ScheduleSettings): string[] {
 }
 
 /**
+ * Get the weekend days (last 2 days of the week) based on start-of-week.
+ * e.g. Sunday start → Fri, Sat; Monday start → Sat, Sun; Saturday start → Thu, Fri
+ */
+export function getWeekendDays(startOfWeek: StartOfWeek): [Day, Day] {
+  const weekOrder = getWeekOrder(startOfWeek);
+  return [weekOrder[5], weekOrder[6]];
+}
+
+/**
  * Get the visible days in order based on settings.
  */
 export function getVisibleDays(settings: ScheduleSettings): Day[] {
@@ -52,7 +61,8 @@ export function getVisibleDays(settings: ScheduleSettings): Day[] {
   if (settings.showWeekends) {
     return weekOrder;
   }
-  return weekOrder.filter((d) => d !== "sat" && d !== "sun");
+  const weekend = getWeekendDays(settings.startOfWeek);
+  return weekOrder.filter((d) => !weekend.includes(d));
 }
 
 /**
