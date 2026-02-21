@@ -63,7 +63,7 @@ export const upsertUser = mutation({
       }
 
       if (Object.keys(updates).length > 0) {
-        await ctx.db.patch("users", existingUser._id, updates);
+        await ctx.db.patch(existingUser._id, updates);
       }
 
       return existingUser._id;

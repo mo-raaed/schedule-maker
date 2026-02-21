@@ -50,11 +50,12 @@ export const getMySchedules = query({
       .query("schedules")
       .withIndex("by_userId", (q) => q.eq("userId", user._id))
       .collect();
-    // Return metadata only (no tasks) for the list view
+    // Return full data so the client can hydrate local state
     return schedules.map((s) => ({
       _id: s._id,
       name: s.name,
-      taskCount: s.tasks.length,
+      tasks: s.tasks,
+      settings: s.settings,
       isPublic: s.isPublic,
       shareId: s.shareId,
       createdAt: s.createdAt,
