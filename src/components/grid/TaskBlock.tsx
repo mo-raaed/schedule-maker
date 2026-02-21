@@ -2,7 +2,7 @@ import { useDraggable } from "@dnd-kit/core";
 import { AlertTriangle } from "lucide-react";
 import type { Task, PaletteMode } from "../../lib/types";
 import { getTaskColors } from "../../lib/colors";
-import { formatTime12h, formatTimeDisplay } from "../../lib/time";
+import { formatTimeDisplay } from "../../lib/time";
 import type { ClockFormat } from "../../lib/types";
 
 interface TaskBlockProps {

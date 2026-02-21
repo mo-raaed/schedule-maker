@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useScheduleStore } from "../../store/scheduleStore";
-import { Plus, Pencil, Copy, Trash2, X, Check } from "lucide-react";
+import { Plus, Pencil, Copy, Trash2 } from "lucide-react";
 
 export default function ScheduleTabs() {
   const schedules = useScheduleStore((s) => s.schedules);

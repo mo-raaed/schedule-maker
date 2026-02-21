@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { Clock } from "lucide-react";
-import { formatTime12h, formatTimeDisplay, isValidTime, generateTimeSuggestions } from "../../lib/time";
+import { formatTimeDisplay, isValidTime, generateTimeSuggestions } from "../../lib/time";
 import type { ClockFormat } from "../../lib/types";
 
 interface TimePickerProps {
