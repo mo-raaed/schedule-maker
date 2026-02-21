@@ -2,7 +2,8 @@ import { useDraggable } from "@dnd-kit/core";
 import { AlertTriangle } from "lucide-react";
 import type { Task, PaletteMode } from "../../lib/types";
 import { getTaskColors } from "../../lib/colors";
-import { formatTime12h } from "../../lib/time";
+import { formatTime12h, formatTimeDisplay } from "../../lib/time";
+import type { ClockFormat } from "../../lib/types";
 
 interface TaskBlockProps {
   task: Task;
@@ -12,6 +13,8 @@ interface TaskBlockProps {
   paletteMode: PaletteMode;
   onClick: () => void;
   readOnly: boolean;
+  clockFormat?: ClockFormat;
+  isDarkMode?: boolean;
 }
 
 export default function TaskBlock({
@@ -22,13 +25,15 @@ export default function TaskBlock({
   paletteMode,
   onClick,
   readOnly,
+  clockFormat = "12h",
+  isDarkMode = false,
 }: TaskBlockProps) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: task.id,
     disabled: readOnly,
   });
 
-  const colors = getTaskColors(task.color, paletteMode);
+  const colors = getTaskColors(task.color, paletteMode, isDarkMode);
   const isCompact = heightPx < 40;
   const isTiny = heightPx < 24;
 
@@ -41,16 +46,16 @@ export default function TaskBlock({
         e.stopPropagation();
         onClick();
       }}
-      className={`absolute left-1 right-1 rounded-lg overflow-hidden cursor-pointer
-        transition-shadow duration-150 select-none
-        ${isDragging ? "opacity-40 shadow-none" : "shadow-sm hover:shadow-md"}
+      className={`absolute left-1 right-1 rounded-xl overflow-hidden cursor-pointer
+        transition-all duration-200 select-none
+        ${isDragging ? "opacity-40 shadow-none" : "shadow-sm hover:shadow-md hover:scale-[1.01]"}
         ${isOverlapping ? "ring-2 ring-red-400/60" : ""}`}
       style={{
         top: topPx,
         height: heightPx,
         backgroundColor: colors.bg,
         color: colors.text,
-        borderLeft: `3px solid ${colors.border}`,
+        borderLeft: `4px solid ${colors.border}`,
         zIndex: isDragging ? 50 : 10,
       }}
     >
@@ -63,7 +68,7 @@ export default function TaskBlock({
         {/* Time range (only if there's room) */}
         {!isCompact && (
           <div className="text-[10px] opacity-75 truncate mt-0.5">
-            {formatTime12h(task.startTime)} – {formatTime12h(task.endTime)}
+            {formatTimeDisplay(task.startTime, clockFormat)} – {formatTimeDisplay(task.endTime, clockFormat)}
           </div>
         )}
 

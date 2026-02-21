@@ -10,8 +10,8 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { useScheduleStore, useAppSettingsStore } from "../../store/scheduleStore";
-import type { Day, Task, ScheduleSettings } from "../../lib/types";
-import { getVisibleDays, generateTimeSlots, formatTime12h, timeToMinutes, minutesToTime, findOverlaps } from "../../lib/time";
+import type { Day, Task, ScheduleSettings, ClockFormat } from "../../lib/types";
+import { getVisibleDays, generateTimeSlots, formatTimeDisplay, timeToMinutes, minutesToTime, findOverlaps } from "../../lib/time";
 import { DAY_SHORT_LABELS } from "../../lib/types";
 import TaskBlock from "./TaskBlock";
 import { getTaskColors } from "../../lib/colors";
@@ -41,9 +41,11 @@ export default function WeeklyGrid({
   const schedule = useScheduleStore((s) => s.getActiveSchedule());
   const updateTask = useScheduleStore((s) => s.updateTask);
   const paletteMode = useAppSettingsStore((s) => s.paletteMode);
+  const isDarkMode = useAppSettingsStore((s) => s.darkMode);
 
   const settings = overrideSettings ?? schedule?.settings;
   const tasks = overrideTasks ?? schedule?.tasks ?? [];
+  const clockFormat: ClockFormat = settings?.clockFormat ?? "12h";
 
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
@@ -139,23 +141,33 @@ export default function WeeklyGrid({
     >
       <div
         ref={gridRef}
-        className="flex-1 overflow-auto bg-card rounded-2xl border border-border shadow-sm"
+        className="flex-1 overflow-auto bg-card rounded-2xl border border-border shadow-card relative"
       >
+        {/* Empty state */}
+        {tasks.length === 0 && !readOnly && (
+          <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+            <div className="text-center opacity-60">
+              <div className="text-4xl mb-3">📅</div>
+              <p className="text-sm font-medium text-muted-foreground">No tasks yet</p>
+              <p className="text-xs text-muted-foreground mt-1">Click a cell or press <kbd className="px-1.5 py-0.5 bg-muted rounded-md font-mono text-[10px]">N</kbd> to add one</p>
+            </div>
+          </div>
+        )}
         <div className="min-w-[600px]">
           {/* ── Day Headers ── */}
           <div
             className="grid sticky top-0 z-20 bg-card/95 backdrop-blur-sm border-b border-border"
             style={{
-              gridTemplateColumns: `72px repeat(${visibleDays.length}, 1fr)`,
+              gridTemplateColumns: `80px repeat(${visibleDays.length}, 1fr)`,
             }}
           >
             {/* Empty top-left corner */}
-            <div className="p-3 text-xs font-medium text-muted-foreground border-r border-border" />
+            <div className="p-3 text-xs font-medium text-muted-foreground border-r border-border/60" />
 
             {visibleDays.map((day) => (
               <div
                 key={day}
-                className="p-3 text-center font-semibold text-sm text-foreground border-r border-border last:border-r-0"
+                className="p-3 text-center font-semibold text-sm text-foreground border-r border-border/60 last:border-r-0"
               >
                 {DAY_SHORT_LABELS[day]}
               </div>
@@ -166,18 +178,18 @@ export default function WeeklyGrid({
           <div
             className="grid relative"
             style={{
-              gridTemplateColumns: `72px repeat(${visibleDays.length}, 1fr)`,
+              gridTemplateColumns: `80px repeat(${visibleDays.length}, 1fr)`,
             }}
           >
             {/* Time labels column */}
-            <div className="border-r border-border" style={{ height: totalHeight }}>
+            <div className="border-r border-border/60" style={{ height: totalHeight }}>
               {timeSlots.map((time) => (
                 <div
                   key={time}
-                  className="flex items-start justify-end pr-2 text-xs text-muted-foreground"
-                  style={{ height: ROW_HEIGHT, paddingTop: 2 }}
+                  className="flex items-start justify-end pr-3 text-xs text-muted-foreground"
+                  style={{ height: ROW_HEIGHT, paddingTop: 3 }}
                 >
-                  {formatTime12h(time)}
+                  {formatTimeDisplay(time, clockFormat)}
                 </div>
               ))}
             </div>
@@ -196,6 +208,8 @@ export default function WeeklyGrid({
                 onCellClick={onCellClick}
                 onTaskClick={onTaskClick}
                 readOnly={readOnly}
+                clockFormat={clockFormat}
+                isDarkMode={isDarkMode}
               />
             ))}
           </div>
@@ -206,11 +220,11 @@ export default function WeeklyGrid({
       <DragOverlay>
         {activeTask && (
           <div
-            className="rounded-lg shadow-xl opacity-90 px-2 py-1 text-xs font-medium"
+            className="rounded-xl shadow-card opacity-90 px-3 py-1.5 text-xs font-medium"
             style={{
-              backgroundColor: getTaskColors(activeTask.color, paletteMode).bg,
-              color: getTaskColors(activeTask.color, paletteMode).text,
-              width: 120,
+              backgroundColor: getTaskColors(activeTask.color, paletteMode, isDarkMode).bg,
+              color: getTaskColors(activeTask.color, paletteMode, isDarkMode).text,
+              width: 130,
             }}
           >
             {activeTask.name}
@@ -236,6 +250,8 @@ interface DayColumnProps {
   onCellClick?: (day: Day, time: string) => void;
   onTaskClick?: (task: Task) => void;
   readOnly: boolean;
+  clockFormat: ClockFormat;
+  isDarkMode: boolean;
 }
 
 function DayColumn({
@@ -249,6 +265,8 @@ function DayColumn({
   onCellClick,
   onTaskClick,
   readOnly,
+  clockFormat,
+  isDarkMode,
 }: DayColumnProps) {
   const dayTasks = useMemo(
     () => tasks.filter((t) => t.days.includes(day)),
@@ -260,7 +278,7 @@ function DayColumn({
 
   return (
     <div
-      className="relative border-r border-border last:border-r-0"
+      className="relative border-r border-border/60 last:border-r-0"
       style={{ height: totalHeight }}
     >
       {/* Grid lines (time slot cells) */}
@@ -291,6 +309,8 @@ function DayColumn({
             paletteMode={paletteMode}
             onClick={() => onTaskClick?.(task)}
             readOnly={readOnly}
+            clockFormat={clockFormat}
+            isDarkMode={isDarkMode}
           />
         );
       })}
@@ -313,8 +333,8 @@ function DroppableCell({ id, height, onClick, readOnly }: DroppableCellProps) {
   return (
     <div
       ref={setNodeRef}
-      className={`border-b border-border/50 transition-colors
-        ${!readOnly ? "cursor-pointer hover:bg-primary/[0.03]" : ""}
+      className={`border-b border-border/30 transition-colors
+        ${!readOnly ? "cursor-pointer hover:bg-primary/[0.04]" : ""}
         ${isOver ? "bg-primary/10" : ""}`}
       style={{ height }}
       onClick={() => {

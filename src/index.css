@@ -1,38 +1,42 @@
 @import "tailwindcss";
 
-/* Clean modern theme */
+/* ─── Soft & Rounded Theme ──────────────────────────────────────── */
 @theme {
   --font-sans: "Inter", system-ui, sans-serif;
 
-  /* Light Colors */
-  --color-background: oklch(0.985 0.002 247);
-  --color-foreground: oklch(0.205 0.015 247);
+  /* Light Colors — warm neutral base */
+  --color-background: oklch(0.985 0.003 250);
+  --color-foreground: oklch(0.18 0.015 250);
 
-  --color-card: oklch(0.995 0.001 247);
-  --color-card-foreground: oklch(0.205 0.015 247);
+  --color-card: oklch(0.995 0.001 250);
+  --color-card-foreground: oklch(0.18 0.015 250);
 
   --color-primary: oklch(0.55 0.2 260);
   --color-primary-foreground: oklch(0.98 0.005 260);
 
-  --color-muted: oklch(0.94 0.005 247);
-  --color-muted-foreground: oklch(0.5 0.01 247);
+  --color-muted: oklch(0.94 0.005 250);
+  --color-muted-foreground: oklch(0.48 0.01 250);
 
-  --color-accent: oklch(0.94 0.01 247);
-  --color-accent-foreground: oklch(0.205 0.015 247);
+  --color-accent: oklch(0.95 0.008 250);
+  --color-accent-foreground: oklch(0.18 0.015 250);
 
-  --color-border: oklch(0.9 0.005 247);
+  --color-border: oklch(0.91 0.004 250);
 
   --color-destructive: oklch(0.55 0.2 27);
   --color-destructive-foreground: oklch(0.98 0.005 27);
 
+  /* Radius tokens */
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
 
   /* Animations */
   --animate-fade-in: fade-in 0.2s ease-out;
   --animate-slide-up: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   --animate-scale-in: scale-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-slide-right: slide-right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 
   @keyframes fade-in {
     from { opacity: 0; }
@@ -46,40 +50,46 @@
     from { opacity: 0; transform: scale(0.96); }
     to { opacity: 1; transform: scale(1); }
   }
+  @keyframes slide-right {
+    from { opacity: 0; transform: translateX(16px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
 }
 
-/* Dark mode overrides */
+/* ─── Dark Mode Overrides ─────────────────────────────────────── */
 .dark {
-  --color-background: oklch(0.145 0.005 247);
-  --color-foreground: oklch(0.92 0.005 247);
+  --color-background: oklch(0.13 0.005 250);
+  --color-foreground: oklch(0.92 0.005 250);
 
-  --color-card: oklch(0.18 0.005 247);
-  --color-card-foreground: oklch(0.92 0.005 247);
+  --color-card: oklch(0.17 0.005 250);
+  --color-card-foreground: oklch(0.92 0.005 250);
 
   --color-primary: oklch(0.62 0.2 260);
   --color-primary-foreground: oklch(0.98 0.005 260);
 
-  --color-muted: oklch(0.25 0.005 247);
-  --color-muted-foreground: oklch(0.6 0.01 247);
+  --color-muted: oklch(0.22 0.005 250);
+  --color-muted-foreground: oklch(0.58 0.01 250);
 
-  --color-accent: oklch(0.22 0.01 247);
-  --color-accent-foreground: oklch(0.92 0.005 247);
+  --color-accent: oklch(0.20 0.008 250);
+  --color-accent-foreground: oklch(0.92 0.005 250);
 
-  --color-border: oklch(0.28 0.005 247);
+  --color-border: oklch(0.26 0.005 250);
 
   --color-destructive: oklch(0.55 0.2 27);
   --color-destructive-foreground: oklch(0.98 0.005 27);
 }
 
-/* Base styles */
+/* ─── Base Styles ─────────────────────────────────────────────── */
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
   font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Smooth scrollbars */
+/* ─── Smooth Scrollbars ───────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -88,15 +98,38 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: oklch(0.8 0.005 247);
+  background: oklch(0.82 0.004 250);
   border-radius: 3px;
 }
 .dark ::-webkit-scrollbar-thumb {
-  background: oklch(0.35 0.005 247);
+  background: oklch(0.32 0.004 250);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.7 0.005 247);
+  background: oklch(0.7 0.005 250);
 }
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.45 0.005 247);
+  background: oklch(0.42 0.005 250);
+}
+
+/* ─── Utility Shadows ─────────────────────────────────────────── */
+.shadow-soft {
+  box-shadow: 0 2px 12px oklch(0.5 0.01 250 / 0.06);
+}
+.dark .shadow-soft {
+  box-shadow: 0 2px 12px oklch(0 0 0 / 0.25);
+}
+.shadow-card {
+  box-shadow: 0 4px 24px oklch(0.5 0.01 250 / 0.08), 0 1px 4px oklch(0.5 0.01 250 / 0.04);
+}
+.dark .shadow-card {
+  box-shadow: 0 4px 24px oklch(0 0 0 / 0.35), 0 1px 4px oklch(0 0 0 / 0.15);
+}
+
+/* ─── Scrollbar Utilities ─────────────────────────────────────── */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }

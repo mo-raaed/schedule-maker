@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { Clock } from "lucide-react";
-import { formatTime12h, isValidTime, generateTimeSuggestions } from "../../lib/time";
+import { formatTime12h, formatTimeDisplay, isValidTime, generateTimeSuggestions } from "../../lib/time";
+import type { ClockFormat } from "../../lib/types";
 
 interface TimePickerProps {
   value: string;           // "HH:mm"
@@ -9,6 +10,7 @@ interface TimePickerProps {
   increment?: number;      // for suggestion list (15, 30, 60)
   startHour?: number;
   endHour?: number;
+  clockFormat?: ClockFormat;
 }
 
 export default function TimePicker({
@@ -18,6 +20,7 @@ export default function TimePicker({
   increment = 30,
   startHour = 0,
   endHour = 24,
+  clockFormat = "12h",
 }: TimePickerProps) {
   const [inputValue, setInputValue] = useState(value);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -105,26 +108,26 @@ export default function TimePicker({
           onFocus={() => setShowDropdown(true)}
           onBlur={handleBlur}
           placeholder="HH:mm"
-          className="w-full rounded-xl border border-border bg-card pl-9 pr-3 py-2.5
-            text-sm text-foreground transition-colors
+          className="w-full rounded-xl border border-border bg-muted/40 pl-9 pr-3 py-2.5
+            text-sm text-foreground transition-all duration-200
             focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50
-            hover:border-primary/30"
+            hover:border-primary/30 hover:bg-muted/60"
         />
 
         {/* Suggestions dropdown */}
         {showDropdown && (
           <div className="absolute z-50 mt-1 w-full max-h-48 overflow-y-auto rounded-xl border border-border
-            bg-card shadow-xl">
+            bg-card shadow-card">
             {suggestions.map((time) => (
               <button
                 key={time}
                 type="button"
                 onMouseDown={() => handleSelect(time)}
-                className={`w-full px-3 py-2 text-sm text-left transition-colors cursor-pointer
+                className={`w-full px-3 py-2.5 text-sm text-left transition-colors cursor-pointer
                   hover:bg-accent first:rounded-t-xl last:rounded-b-xl
                   ${time === value ? "bg-primary/5 text-primary font-medium" : "text-foreground"}`}
               >
-                {formatTime12h(time)}
+                {formatTimeDisplay(time, clockFormat)}
               </button>
             ))}
           </div>
@@ -132,7 +135,7 @@ export default function TimePicker({
       </div>
       {/* Display the 12h value below for clarity */}
       {isValidTime(inputValue) && (
-        <p className="text-xs text-muted-foreground">{formatTime12h(inputValue)}</p>
+        <p className="text-xs text-muted-foreground">{formatTimeDisplay(inputValue, clockFormat)}</p>
       )}
     </div>
   );

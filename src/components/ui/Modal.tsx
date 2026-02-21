@@ -52,29 +52,29 @@ export default function Modal({
       }}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-fade-in" />
+      <div className="absolute inset-0 bg-black/30 backdrop-blur-md animate-fade-in" />
 
       {/* Panel — slides up on mobile, scales on desktop */}
       <div
-        className={`relative w-full ${maxWidth} bg-card rounded-t-2xl sm:rounded-2xl shadow-2xl
+        className={`relative w-full ${maxWidth} bg-card rounded-t-2xl sm:rounded-2xl shadow-card
           border border-border/50 overflow-hidden
           animate-slide-up sm:animate-scale-in`}
       >
         {/* Header */}
         {title && (
-          <div className="flex items-center justify-between px-6 pt-5 pb-2">
+          <div className="flex items-center justify-between px-7 pt-6 pb-2">
             <h2 className="text-lg font-semibold text-foreground">{title}</h2>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg hover:bg-accent transition-colors text-muted-foreground cursor-pointer"
+              className="p-2 rounded-full hover:bg-accent transition-colors text-muted-foreground cursor-pointer"
             >
-              <X className="h-5 w-5" />
+              <X className="h-4 w-4" />
             </button>
           </div>
         )}
 
         {/* Body */}
-        <div className="px-6 pb-6 pt-2 max-h-[85vh] overflow-y-auto">
+        <div className="px-7 pb-7 pt-2 max-h-[85vh] overflow-y-auto">
           {children}
         </div>
       </div>
