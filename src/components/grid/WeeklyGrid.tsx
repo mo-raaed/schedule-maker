@@ -141,7 +141,7 @@ export default function WeeklyGrid({
     >
       <div
         ref={gridRef}
-        className="overflow-auto bg-card rounded-2xl border border-border shadow-card relative mb-6"
+        className="overflow-auto bg-card rounded-2xl border border-border shadow-sm relative mb-[3vh]"
       >
         {/* Empty state */}
         {tasks.length === 0 && !readOnly && (
@@ -156,7 +156,7 @@ export default function WeeklyGrid({
         <div className="min-w-[600px]">
           {/* ── Day Headers ── */}
           <div
-            className="grid sticky top-0 z-20 bg-card/95 backdrop-blur-sm border-b border-border"
+            className="grid sticky top-0 z-20 bg-card border-b border-border"
             style={{
               gridTemplateColumns: `80px repeat(${visibleDays.length}, 1fr)`,
             }}
@@ -220,7 +220,7 @@ export default function WeeklyGrid({
       <DragOverlay>
         {activeTask && (
           <div
-            className="rounded-xl shadow-card opacity-90 px-3 py-1.5 text-xs font-medium"
+            className="rounded-xl shadow-sm opacity-90 px-3 py-1.5 text-xs font-medium"
             style={{
               backgroundColor: getTaskColors(activeTask.color, paletteMode, isDarkMode).bg,
               color: getTaskColors(activeTask.color, paletteMode, isDarkMode).text,
@@ -333,8 +333,8 @@ function DroppableCell({ id, height, onClick, readOnly }: DroppableCellProps) {
   return (
     <div
       ref={setNodeRef}
-      className={`border-b border-border/30 transition-colors
-        ${!readOnly ? "cursor-pointer hover:bg-primary/[0.04]" : ""}
+      className={`border-b border-border/30
+        ${!readOnly ? "cursor-pointer" : ""}
         ${isOver ? "bg-primary/10" : ""}`}
       style={{ height }}
       onClick={() => {

@@ -78,8 +78,8 @@ function ToolbarButton({ icon, label, onClick, primary }: ToolbarButtonProps) {
         onClick={onClick}
         className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl
           bg-primary text-primary-foreground font-medium text-sm
-          shadow-sm hover:bg-primary/90 active:scale-[0.97]
-          transition-[color,background-color,border-color,box-shadow] duration-150 cursor-pointer"
+          shadow-sm hover:bg-primary/90
+          transition-colors duration-100 cursor-pointer"
       >
         {icon}
         {label}
@@ -92,8 +92,8 @@ function ToolbarButton({ icon, label, onClick, primary }: ToolbarButtonProps) {
       onClick={onClick}
       className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl
         text-sm text-foreground font-medium
-        hover:bg-accent active:scale-[0.97]
-        transition-[color,background-color,border-color] duration-150 cursor-pointer"
+        hover:bg-accent
+        transition-colors duration-100 cursor-pointer"
     >
       {icon}
       {label}

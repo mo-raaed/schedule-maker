@@ -126,7 +126,7 @@ export default function TimePicker({
         {/* Suggestions dropdown */}
         {showDropdown && (
           <div className="absolute z-50 mt-1 w-full max-h-48 overflow-y-auto rounded-xl border border-border
-            bg-card shadow-card">
+            bg-card shadow-sm border-border">
             {suggestions.map((time) => (
               <button
                 key={time}

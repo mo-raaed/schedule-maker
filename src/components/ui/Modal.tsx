@@ -52,7 +52,7 @@ export default function Modal({
       }}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm animate-fade-in" />
+      <div className="absolute inset-0 bg-black/40 animate-fade-in" />
 
       {/* Panel — slides up on mobile, scales on desktop */}
       <div

@@ -84,7 +84,7 @@ export default function ScheduleBuilder() {
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-background">
       {/* ── Header ── */}
-      <header className="shrink-0 flex items-center justify-between px-4 h-14 border-b border-border bg-card/80 backdrop-blur-sm z-30">
+      <header className="shrink-0 flex items-center justify-between px-4 h-14 border-b border-border bg-card z-30">
         {/* Left — Logo */}
         <div className="flex items-center gap-2 shrink-0">
           <Calendar className="h-5 w-5 text-primary" />
@@ -125,7 +125,7 @@ export default function ScheduleBuilder() {
       {/* ── Body: Grid + Right Toolbar ── */}
       <div className="flex flex-1 min-h-0">
         {/* Grid Area */}
-        <main className="flex-1 min-h-0 min-w-0 p-3 sm:p-5 md:p-6 pb-18 md:pb-6 overflow-y-auto">
+        <main className="flex-1 min-h-0 min-w-0 px-[3vw] sm:px-[4vw] md:px-[5vw] pt-4 sm:pt-6 pb-20 md:pb-8 overflow-y-auto">
           <div className="max-w-6xl mx-auto">
             <WeeklyGrid
               gridRef={gridRef}

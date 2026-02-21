@@ -113,16 +113,16 @@ body {
 
 /* ─── Utility Shadows ─────────────────────────────────────────── */
 .shadow-soft {
-  box-shadow: 0 2px 12px oklch(0.5 0.01 250 / 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 .dark .shadow-soft {
-  box-shadow: 0 2px 12px oklch(0 0 0 / 0.25);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 .shadow-card {
-  box-shadow: 0 4px 24px oklch(0.5 0.01 250 / 0.08), 0 1px 4px oklch(0.5 0.01 250 / 0.04);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.03);
 }
 .dark .shadow-card {
-  box-shadow: 0 4px 24px oklch(0 0 0 / 0.35), 0 1px 4px oklch(0 0 0 / 0.15);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 /* ─── Scrollbar Utilities ─────────────────────────────────────── */

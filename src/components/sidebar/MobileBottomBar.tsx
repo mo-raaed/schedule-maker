@@ -31,7 +31,7 @@ export default function MobileBottomBar({
       {moreOpen && (
         <>
           <div
-            className="fixed inset-0 bg-black/20 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/20"
             onClick={() => setMoreOpen(false)}
           />
           <div className="absolute bottom-16 right-3 w-44 bg-card rounded-2xl border border-border shadow-card overflow-hidden animate-slide-up z-50">
@@ -56,7 +56,7 @@ export default function MobileBottomBar({
       )}
 
       {/* Bottom bar */}
-      <div className="flex items-center justify-around bg-card/95 backdrop-blur-sm border-t border-border h-14 px-2">
+      <div className="flex items-center justify-around bg-card border-t border-border h-14 px-2">
         <BottomBarItem icon={<Plus className="h-5 w-5" />} label="Add" onClick={onAddTask} primary />
         <BottomBarItem icon={<Settings className="h-5 w-5" />} label="Settings" onClick={onSettings} />
         <BottomBarItem icon={<Share2 className="h-5 w-5" />} label="Export" onClick={onExportShare} />
