@@ -116,9 +116,9 @@ export default function AddTaskModal({
       title={editTask ? "Edit Task" : "Add Task"}
       maxWidth="max-w-lg"
     >
-      <div className="space-y-5">
+      <div className="space-y-6">
         {/* Name */}
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           <label className="block text-sm font-medium text-foreground">
             Name <span className="text-destructive">*</span>
           </label>
@@ -128,14 +128,14 @@ export default function AddTaskModal({
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g., Math Lecture, Gym, Meeting"
             autoFocus
-            className="w-full rounded-xl border border-border bg-card px-3 py-2.5 text-sm text-foreground
-              transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50
-              hover:border-primary/30 placeholder:text-muted-foreground"
+            className="w-full rounded-xl border border-border bg-muted/40 px-4 py-2.5 text-sm text-foreground
+              transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50
+              hover:bg-muted/60 placeholder:text-muted-foreground"
           />
         </div>
 
         {/* Description */}
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           <label className="block text-sm font-medium text-foreground">
             Description
           </label>
@@ -144,9 +144,9 @@ export default function AddTaskModal({
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Optional notes..."
             rows={2}
-            className="w-full rounded-xl border border-border bg-card px-3 py-2.5 text-sm text-foreground
-              transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50
-              hover:border-primary/30 placeholder:text-muted-foreground resize-none"
+            className="w-full rounded-xl border border-border bg-muted/40 px-4 py-2.5 text-sm text-foreground
+              transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50
+              hover:bg-muted/60 placeholder:text-muted-foreground resize-none"
           />
         </div>
 
@@ -154,7 +154,7 @@ export default function AddTaskModal({
         <ColorPicker value={color} onChange={setColor} paletteMode={paletteMode} />
 
         {/* Days Multi-select */}
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           <label className="block text-sm font-medium text-foreground">
             Days <span className="text-destructive">*</span>
           </label>
@@ -166,11 +166,11 @@ export default function AddTaskModal({
                   key={day}
                   type="button"
                   onClick={() => toggleDay(day)}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-150 cursor-pointer
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors duration-150 cursor-pointer
                     ${
                       isSelected
                         ? "bg-primary text-primary-foreground shadow-sm"
-                        : "bg-muted text-muted-foreground hover:bg-accent"
+                        : "bg-muted/50 text-muted-foreground hover:bg-muted/80"
                     }`}
                 >
                   {DAY_SHORT_LABELS[day]}
@@ -189,6 +189,7 @@ export default function AddTaskModal({
             increment={settings?.timeIncrement ?? 30}
             startHour={settings?.startHour ?? 0}
             endHour={settings?.endHour ?? 24}
+            clockFormat={settings?.clockFormat ?? "12h"}
           />
           <TimePicker
             label="End Time"
@@ -197,6 +198,7 @@ export default function AddTaskModal({
             increment={settings?.timeIncrement ?? 30}
             startHour={settings?.startHour ?? 0}
             endHour={settings?.endHour ?? 24}
+            clockFormat={settings?.clockFormat ?? "12h"}
           />
         </div>
 

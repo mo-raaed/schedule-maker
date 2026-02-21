@@ -28,6 +28,8 @@ export type StartOfWeek = "sunday" | "monday" | "saturday";
 
 export type TimeIncrement = 15 | 30 | 60;
 
+export type ClockFormat = "12h" | "24h";
+
 // ─── Task ───────────────────────────────────────────────────────────
 
 export interface Task {
@@ -48,6 +50,7 @@ export interface ScheduleSettings {
   timeIncrement: TimeIncrement;
   startHour: number; // 0–23
   endHour: number;   // 0–23
+  clockFormat: ClockFormat;
 }
 
 export const DEFAULT_SETTINGS: ScheduleSettings = {
@@ -56,6 +59,7 @@ export const DEFAULT_SETTINGS: ScheduleSettings = {
   timeIncrement: 60,
   startHour: 8,
   endHour: 22,
+  clockFormat: "12h",
 };
 
 // ─── Schedule ───────────────────────────────────────────────────────

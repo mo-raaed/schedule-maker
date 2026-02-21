@@ -1,24 +1,20 @@
 import { useState, useRef, useCallback } from "react";
 import {
   Calendar,
-  Plus,
-  Download,
-  Settings,
-  Share2,
   Moon,
   Sun,
-  Keyboard,
-  FileJson,
 } from "lucide-react";
 import { Authenticated, Unauthenticated } from "convex/react";
 import { SignInButton, UserButton } from "@clerk/clerk-react";
 
 import WeeklyGrid from "./components/grid/WeeklyGrid";
 import AddTaskModal from "./components/modals/AddTaskModal";
-import ExportModal from "./components/modals/ExportModal";
-import ConfigSidebar from "./components/sidebar/ConfigSidebar";
-import SchedulePicker from "./components/sidebar/SchedulePicker";
-import { ShareModal, ImportExportModal } from "./components/modals/ShareImportModals";
+import ExportShareModal from "./components/modals/ExportShareModal";
+import DataModal from "./components/modals/DataModal";
+import SettingsModal from "./components/modals/SettingsModal";
+import ScheduleTabs from "./components/sidebar/ScheduleTabs";
+import RightToolbar from "./components/sidebar/RightToolbar";
+import MobileBottomBar from "./components/sidebar/MobileBottomBar";
 import Button from "./components/ui/Button";
 import Modal from "./components/ui/Modal";
 
@@ -37,11 +33,10 @@ export default function ScheduleBuilder() {
   // Modal states
   const [taskModalOpen, setTaskModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
-  const [exportModalOpen, setExportModalOpen] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [exportShareOpen, setExportShareOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
-  const [shareModalOpen, setShareModalOpen] = useState(false);
-  const [importExportOpen, setImportExportOpen] = useState(false);
+  const [dataOpen, setDataOpen] = useState(false);
   const [prefillDay, setPrefillDay] = useState<Day | undefined>();
   const [prefillTime, setPrefillTime] = useState<string | undefined>();
 
@@ -60,11 +55,11 @@ export default function ScheduleBuilder() {
       setPrefillTime(undefined);
       setTaskModalOpen(true);
     }, []),
-    onExport: useCallback(() => setExportModalOpen(true), []),
-    onSettings: useCallback(() => setSidebarOpen((o) => !o), []),
+    onExport: useCallback(() => setExportShareOpen(true), []),
+    onSettings: useCallback(() => setSettingsOpen((o) => !o), []),
   });
 
-  // ── Grid event handlers ──
+  // ── Callbacks ──
   const handleCellClick = useCallback((day: Day, time: string) => {
     setEditingTask(null);
     setPrefillDay(day);
@@ -79,32 +74,30 @@ export default function ScheduleBuilder() {
     setTaskModalOpen(true);
   }, []);
 
+  const openAddTask = useCallback(() => {
+    setEditingTask(null);
+    setPrefillDay(undefined);
+    setPrefillTime(undefined);
+    setTaskModalOpen(true);
+  }, []);
+
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-background">
       {/* ── Header ── */}
-      <header className="shrink-0 flex items-center justify-between px-4 h-14 border-b border-border bg-card/80 backdrop-blur-sm z-30">
-        {/* Left */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <Calendar className="h-5 w-5 text-primary" />
-            <span className="font-bold text-base tracking-tight hidden sm:inline">
-              Schedule Maker
-            </span>
-          </div>
-          <div className="h-5 w-px bg-border hidden sm:block" />
-          <SchedulePicker />
+      <header className="shrink-0 flex items-center justify-between px-4 h-14 border-b border-border bg-card z-30">
+        {/* Left — Logo */}
+        <div className="flex items-center gap-2 shrink-0">
+          <Calendar className="h-5 w-5 text-primary" />
+          <span className="font-bold text-base tracking-tight hidden sm:inline">
+            Schedule Maker
+          </span>
         </div>
 
-        {/* Right */}
-        <div className="flex items-center gap-1.5">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setShortcutsOpen(true)}
-            title="Keyboard Shortcuts (?)"
-          >
-            <Keyboard className="h-4 w-4" />
-          </Button>
+        {/* Center — Schedule Tabs */}
+        <ScheduleTabs />
+
+        {/* Right — Dark mode + auth */}
+        <div className="flex items-center gap-1.5 shrink-0">
           <Button
             variant="ghost"
             size="icon"
@@ -113,39 +106,7 @@ export default function ScheduleBuilder() {
           >
             {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setImportExportOpen(true)}
-            title="Import/Export JSON"
-          >
-            <FileJson className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setShareModalOpen(true)}
-            title="Share"
-          >
-            <Share2 className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setExportModalOpen(true)}
-            title="Export (Ctrl+E)"
-          >
-            <Download className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setSidebarOpen(true)}
-            title="Settings (Ctrl+,)"
-          >
-            <Settings className="h-4 w-4" />
-          </Button>
-          <div className="h-5 w-px bg-border ml-1" />
+          <div className="h-5 w-px bg-border ml-0.5" />
           <Authenticated>
             <UserButton
               appearance={{ elements: { avatarBox: "h-8 w-8" } }}
@@ -161,33 +122,39 @@ export default function ScheduleBuilder() {
         </div>
       </header>
 
-      {/* ── Grid Area ── */}
-      <main className="flex-1 min-h-0 p-3 sm:p-4">
-        <WeeklyGrid
-          gridRef={gridRef}
-          onCellClick={handleCellClick}
-          onTaskClick={handleTaskClick}
+      {/* ── Body: Grid + Right Toolbar ── */}
+      <div className="flex flex-1 min-h-0">
+        {/* Grid Area */}
+        <main className="flex-1 min-h-0 min-w-0 px-[3vw] sm:px-[4vw] md:px-[5vw] pt-4 sm:pt-5 pb-3 sm:pb-4 flex flex-col">
+          <div className="max-w-6xl mx-auto w-full flex-1 min-h-0 flex flex-col">
+            <WeeklyGrid
+              gridRef={gridRef}
+              onCellClick={handleCellClick}
+              onTaskClick={handleTaskClick}
+            />
+          </div>
+        </main>
+
+        {/* Right Toolbar (desktop) */}
+        <RightToolbar
+          onAddTask={openAddTask}
+          onSettings={() => setSettingsOpen(true)}
+          onExportShare={() => setExportShareOpen(true)}
+          onData={() => setDataOpen(true)}
+          onShortcuts={() => setShortcutsOpen(true)}
         />
-      </main>
+      </div>
 
-      {/* ── Floating Add Task Button ── */}
-      <button
-        onClick={() => {
-          setEditingTask(null);
-          setPrefillDay(undefined);
-          setPrefillTime(undefined);
-          setTaskModalOpen(true);
-        }}
-        className="fixed bottom-6 right-6 z-30 h-14 w-14 rounded-full bg-primary text-primary-foreground
-          shadow-lg shadow-primary/25 flex items-center justify-center
-          hover:shadow-xl hover:shadow-primary/30 hover:scale-105
-          active:scale-95 transition-all duration-150 cursor-pointer"
-        title="Add Task (N)"
-      >
-        <Plus className="h-6 w-6" />
-      </button>
+      {/* Mobile Bottom Bar */}
+      <MobileBottomBar
+        onAddTask={openAddTask}
+        onSettings={() => setSettingsOpen(true)}
+        onExportShare={() => setExportShareOpen(true)}
+        onData={() => setDataOpen(true)}
+        onShortcuts={() => setShortcutsOpen(true)}
+      />
 
-      {/* ── Modals & Sidebar ── */}
+      {/* ── Modals ── */}
       <AddTaskModal
         open={taskModalOpen}
         onClose={() => {
@@ -198,21 +165,17 @@ export default function ScheduleBuilder() {
         prefillDay={prefillDay}
         prefillTime={prefillTime}
       />
-      <ExportModal
-        open={exportModalOpen}
-        onClose={() => setExportModalOpen(false)}
+      <ExportShareModal
+        open={exportShareOpen}
+        onClose={() => setExportShareOpen(false)}
       />
-      <ConfigSidebar
-        open={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
+      <SettingsModal
+        open={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
       />
-      <ShareModal
-        open={shareModalOpen}
-        onClose={() => setShareModalOpen(false)}
-      />
-      <ImportExportModal
-        open={importExportOpen}
-        onClose={() => setImportExportOpen(false)}
+      <DataModal
+        open={dataOpen}
+        onClose={() => setDataOpen(false)}
       />
 
       {/* Shortcuts Modal */}
@@ -234,7 +197,7 @@ export default function ScheduleBuilder() {
           ].map(([key, desc]) => (
             <div key={key} className="flex items-center justify-between">
               <span className="text-muted-foreground">{desc}</span>
-              <kbd className="px-2 py-0.5 bg-muted rounded-md text-xs font-mono font-medium">
+              <kbd className="px-2 py-0.5 bg-muted rounded-lg text-xs font-mono font-medium">
                 {key}
               </kbd>
             </div>

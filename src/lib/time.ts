@@ -1,4 +1,4 @@
-import type { Day, ScheduleSettings, StartOfWeek, Task } from "./types";
+import type { ClockFormat, Day, ScheduleSettings, StartOfWeek, Task } from "./types";
 import { ALL_DAYS } from "./types";
 
 /**
@@ -28,6 +28,27 @@ export function formatTime12h(time: string): string {
   const period = h24 >= 12 ? "PM" : "AM";
   const h12 = h24 === 0 ? 12 : h24 > 12 ? h24 - 12 : h24;
   return `${h12}:${m.toString().padStart(2, "0")} ${period}`;
+}
+
+/**
+ * Format "HH:mm" based on the clock format setting.
+ */
+export function formatTimeDisplay(time: string, clockFormat: ClockFormat): string {
+  if (clockFormat === "24h") return time;
+  return formatTime12h(time);
+}
+
+/**
+ * Format an hour number (0-24) based on clock format.
+ */
+export function formatHourDisplay(h: number, clockFormat: ClockFormat): string {
+  if (clockFormat === "24h") {
+    return `${(h % 24).toString().padStart(2, "0")}:00`;
+  }
+  if (h === 0 || h === 24) return "12:00 AM";
+  if (h === 12) return "12:00 PM";
+  if (h < 12) return `${h}:00 AM`;
+  return `${h - 12}:00 PM`;
 }
 
 /**

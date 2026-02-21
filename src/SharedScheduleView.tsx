@@ -75,7 +75,7 @@ export default function SharedScheduleView({ shareId }: SharedScheduleViewProps)
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-background text-foreground">
       {/* Header */}
-      <header className="shrink-0 flex items-center justify-between px-4 h-14 border-b border-border bg-card/80 backdrop-blur-sm">
+      <header className="shrink-0 flex items-center justify-between px-4 h-14 border-b border-border bg-card">
         <div className="flex items-center gap-3">
           <a
             href="/"
