@@ -134,6 +134,7 @@ export default function WeeklyGrid({
   };
 
   return (
+    <div className="flex-1 min-h-0 flex flex-col">
     <DndContext
       sensors={sensors}
       onDragStart={handleDragStart}
@@ -232,6 +233,7 @@ export default function WeeklyGrid({
         )}
       </DragOverlay>
     </DndContext>
+    </div>
   );
 }
 
