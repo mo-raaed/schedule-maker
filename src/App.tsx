@@ -119,7 +119,7 @@ function LandingPage({ onGuestMode }: { onGuestMode: () => void }) {
           <button
             onClick={onGuestMode}
             className="w-full sm:w-auto min-w-[200px] px-6 py-3.5 rounded-xl bg-primary text-primary-foreground 
-              font-semibold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20
+              font-semibold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20
               active:scale-[0.97] cursor-pointer flex items-center justify-center gap-2"
           >
             Start Building

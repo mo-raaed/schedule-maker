@@ -87,14 +87,18 @@ export default function ScheduleTabs() {
             <button
               key={schedule.id}
               onClick={() => setActiveSchedule(schedule.id)}
+              onDoubleClick={() => {
+                setRenamingId(schedule.id);
+                setRenameValue(schedule.name);
+              }}
               onContextMenu={(e) => handleContextMenu(e, schedule.id)}
               className={`relative shrink-0 flex items-center gap-1.5 h-8 px-3 rounded-xl text-sm font-medium
-                transition-all duration-200 cursor-pointer select-none max-w-[180px]
+                transition-colors cursor-pointer select-none max-w-[180px]
                 ${isActive
                   ? "bg-primary text-primary-foreground shadow-sm"
                   : "text-muted-foreground hover:bg-accent hover:text-foreground"
                 }`}
-              title={schedule.name}
+              title={`${schedule.name} — double-click to rename`}
             >
               <span className="truncate">{schedule.name}</span>
               {schedule.tasks.length > 0 && (

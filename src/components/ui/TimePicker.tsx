@@ -48,9 +48,18 @@ export default function TimePicker({
   }, []);
 
   const handleInputChange = (raw: string) => {
-    setInputValue(raw);
-    // Auto-format and validate
-    const cleaned = raw.replace(/[^0-9:]/g, "");
+    // Strip everything except digits and colon
+    let cleaned = raw.replace(/[^0-9:]/g, "");
+
+    // Auto-insert colon after 2 digits if user is typing pure numbers (no colon yet)
+    if (/^\d{3,}$/.test(cleaned) && !cleaned.includes(":")) {
+      cleaned = cleaned.slice(0, 2) + ":" + cleaned.slice(2);
+    }
+
+    // Cap at 5 chars (HH:mm)
+    cleaned = cleaned.slice(0, 5);
+
+    setInputValue(cleaned);
     if (isValidTime(cleaned)) {
       onChange(cleaned.padStart(5, "0"));
     }
@@ -109,7 +118,7 @@ export default function TimePicker({
           onBlur={handleBlur}
           placeholder="HH:mm"
           className="w-full rounded-xl border border-border bg-muted/40 pl-9 pr-3 py-2.5
-            text-sm text-foreground transition-all duration-200
+            text-sm text-foreground transition-colors duration-150
             focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50
             hover:border-primary/30 hover:bg-muted/60"
         />

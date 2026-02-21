@@ -141,7 +141,7 @@ export default function WeeklyGrid({
     >
       <div
         ref={gridRef}
-        className="flex-1 overflow-auto bg-card rounded-2xl border border-border shadow-card relative"
+        className="overflow-auto bg-card rounded-2xl border border-border shadow-card relative mb-6"
       >
         {/* Empty state */}
         {tasks.length === 0 && !readOnly && (

@@ -125,8 +125,8 @@ export default function ScheduleBuilder() {
       {/* ── Body: Grid + Right Toolbar ── */}
       <div className="flex flex-1 min-h-0">
         {/* Grid Area */}
-        <main className="flex-1 min-h-0 min-w-0 p-3 sm:p-5 md:p-6 pb-18 md:pb-6 overflow-auto">
-          <div className="max-w-6xl mx-auto h-full">
+        <main className="flex-1 min-h-0 min-w-0 p-3 sm:p-5 md:p-6 pb-18 md:pb-6 overflow-y-auto">
+          <div className="max-w-6xl mx-auto">
             <WeeklyGrid
               gridRef={gridRef}
               onCellClick={handleCellClick}

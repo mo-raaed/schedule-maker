@@ -84,7 +84,7 @@ export default function DataModal({ open, onClose }: DataModalProps) {
           onClick={handleExportJson}
           disabled={!schedule}
           className="w-full flex items-center gap-3 p-4 rounded-2xl border-2 border-border
-            hover:border-primary/30 hover:bg-accent/50 transition-all duration-200 cursor-pointer
+            hover:border-primary/30 hover:bg-accent/50 transition-colors duration-150 cursor-pointer
             disabled:opacity-50 disabled:cursor-not-allowed text-left"
         >
           <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
@@ -105,7 +105,7 @@ export default function DataModal({ open, onClose }: DataModalProps) {
             className="hidden"
           />
           <div className="w-full flex items-center gap-3 p-4 rounded-2xl border-2 border-dashed border-border
-            hover:border-primary/30 hover:bg-accent/50 transition-all duration-200 cursor-pointer text-left">
+            hover:border-primary/30 hover:bg-accent/50 transition-colors duration-150 cursor-pointer text-left">
             <div className="h-10 w-10 rounded-xl bg-muted flex items-center justify-center shrink-0">
               <Upload className="h-5 w-5 text-muted-foreground" />
             </div>

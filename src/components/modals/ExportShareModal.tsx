@@ -107,7 +107,7 @@ export default function ExportShareModal({ open, onClose }: ExportShareModalProp
             <button
               type="button"
               onClick={() => setFormat("pdf")}
-              className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all duration-200 cursor-pointer
+              className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-colors duration-150 cursor-pointer
                 ${format === "pdf"
                   ? "border-primary bg-primary/5 shadow-soft"
                   : "border-border hover:border-primary/30 hover:bg-accent/50"
@@ -119,7 +119,7 @@ export default function ExportShareModal({ open, onClose }: ExportShareModalProp
             <button
               type="button"
               onClick={() => setFormat("png")}
-              className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all duration-200 cursor-pointer
+              className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-colors duration-150 cursor-pointer
                 ${format === "png"
                   ? "border-primary bg-primary/5 shadow-soft"
                   : "border-border hover:border-primary/30 hover:bg-accent/50"

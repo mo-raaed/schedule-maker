@@ -129,7 +129,7 @@ export default function AddTaskModal({
             placeholder="e.g., Math Lecture, Gym, Meeting"
             autoFocus
             className="w-full rounded-xl border border-border bg-muted/40 px-4 py-2.5 text-sm text-foreground
-              transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50
+              transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50
               hover:bg-muted/60 placeholder:text-muted-foreground"
           />
         </div>
@@ -145,7 +145,7 @@ export default function AddTaskModal({
             placeholder="Optional notes..."
             rows={2}
             className="w-full rounded-xl border border-border bg-muted/40 px-4 py-2.5 text-sm text-foreground
-              transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50
+              transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50
               hover:bg-muted/60 placeholder:text-muted-foreground resize-none"
           />
         </div>
@@ -166,7 +166,7 @@ export default function AddTaskModal({
                   key={day}
                   type="button"
                   onClick={() => toggleDay(day)}
-                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors duration-150 cursor-pointer
                     ${
                       isSelected
                         ? "bg-primary text-primary-foreground shadow-sm"

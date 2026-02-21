@@ -47,7 +47,7 @@ export default function TaskBlock({
         onClick();
       }}
       className={`absolute left-1 right-1 rounded-xl overflow-hidden cursor-pointer
-        transition-all duration-200 select-none
+        transition-[transform,box-shadow,opacity] duration-150 select-none
         ${isDragging ? "opacity-40 shadow-none" : "shadow-sm hover:shadow-md hover:scale-[1.01]"}
         ${isOverlapping ? "ring-2 ring-red-400/60" : ""}`}
       style={{

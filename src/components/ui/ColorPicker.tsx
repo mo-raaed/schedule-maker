@@ -44,7 +44,7 @@ export default function ColorPicker({ value, onChange, paletteMode }: ColorPicke
               key={color.name}
               type="button"
               onClick={() => onChange(hex)}
-              className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer
+              className={`w-9 h-9 rounded-full flex items-center justify-center transition-transform duration-150 cursor-pointer
                 ring-offset-2 ring-offset-card
                 ${isSelected ? "ring-2 ring-primary scale-110 shadow-md" : "hover:scale-110"}`}
               style={{ backgroundColor: displayHex }}
