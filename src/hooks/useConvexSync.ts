@@ -16,7 +16,7 @@ import { DEFAULT_SETTINGS } from "../lib/types";
  * On subsequent mutations:
  *  - Write-through: creates, updates, and deletes are mirrored to Convex
  */
-export function useConvexSync() {
+export function useConvexSync(userReady: boolean) {
   const { isSignedIn } = useAuth();
   const hasSynced = useRef(false);
 
@@ -35,7 +35,7 @@ export function useConvexSync() {
 
   // ── Initial sync on sign-in ──────────────────────────────────────
   useEffect(() => {
-    if (!isSignedIn || hasSynced.current || mySchedules === undefined) return;
+    if (!isSignedIn || !userReady || hasSynced.current || mySchedules === undefined) return;
     hasSynced.current = true;
 
     const localSchedules = useScheduleStore.getState().schedules;
@@ -73,7 +73,7 @@ export function useConvexSync() {
     for (const guest of guestSchedules) {
       void pushGuestSchedule(guest);
     }
-  }, [isSignedIn, mySchedules]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isSignedIn, userReady, mySchedules]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Write-through: mirror local changes → Convex ─────────────────
   useEffect(() => {

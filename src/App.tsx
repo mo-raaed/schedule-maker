@@ -1,5 +1,5 @@
 import { Authenticated, Unauthenticated, useMutation } from "convex/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { api } from "../convex/_generated/api";
 import {
   SignInButton,
@@ -43,11 +43,16 @@ export default function App() {
 
 function AuthenticatedApp() {
   const upsertUser = useMutation(api.users.upsertUser);
-  useConvexSync();
+  const [userReady, setUserReady] = useState(false);
+  const didUpsert = useRef(false);
 
   useEffect(() => {
-    void upsertUser();
+    if (didUpsert.current) return;
+    didUpsert.current = true;
+    void upsertUser().then(() => setUserReady(true));
   }, [upsertUser]);
+
+  useConvexSync(userReady);
 
   return <ScheduleBuilder />;
 }
