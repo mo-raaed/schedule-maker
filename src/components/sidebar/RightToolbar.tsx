@@ -22,7 +22,7 @@ export default function RightToolbar({
   onShortcuts,
 }: RightToolbarProps) {
   return (
-    <aside className="hidden md:flex flex-col w-52 shrink-0 border-l border-border bg-card/50 p-3 gap-1 overflow-y-auto">
+    <aside className="hidden md:flex flex-col w-52 shrink-0 bg-[var(--color-surface-container-low)] p-3 gap-1 overflow-y-auto">
       {/* Primary action */}
       <ToolbarButton
         icon={<Plus className="h-4 w-4" />}
@@ -31,7 +31,7 @@ export default function RightToolbar({
         primary
       />
 
-      <div className="h-px bg-border my-2" />
+      <div className="my-3" />
 
       {/* Schedule actions */}
       <ToolbarButton
@@ -50,7 +50,7 @@ export default function RightToolbar({
         onClick={onData}
       />
 
-      <div className="h-px bg-border my-2" />
+      <div className="my-3" />
 
       {/* Help */}
       <ToolbarButton
@@ -76,10 +76,10 @@ function ToolbarButton({ icon, label, onClick, primary }: ToolbarButtonProps) {
     return (
       <button
         onClick={onClick}
-        className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl
-          bg-primary text-primary-foreground font-medium text-sm
-          shadow-sm hover:bg-primary/90
-          transition-colors duration-100 cursor-pointer"
+        className="flex items-center gap-2.5 px-4 py-2.5 rounded-full
+          gradient-primary text-white font-medium text-sm
+          shadow-soft hover:brightness-110
+          transition-all duration-200 cursor-pointer active:scale-[0.98]"
       >
         {icon}
         {label}
@@ -90,10 +90,10 @@ function ToolbarButton({ icon, label, onClick, primary }: ToolbarButtonProps) {
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl
+      className="flex items-center gap-2.5 px-4 py-2 rounded-full
         text-sm text-foreground font-medium
-        hover:bg-accent
-        transition-colors duration-100 cursor-pointer"
+        hover:bg-[var(--color-surface-container-high)]
+        transition-all duration-200 cursor-pointer active:scale-[0.98]"
     >
       {icon}
       {label}

@@ -31,6 +31,7 @@ const DEFAULT_SETTINGS = {
   timeIncrement: 60,
   startHour: 8,
   endHour: 22,
+  clockFormat: "12h",
 };
 
 // ─── Queries ────────────────────────────────────────────────────────

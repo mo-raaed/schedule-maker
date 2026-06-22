@@ -55,11 +55,11 @@ export default function ScheduleTabs() {
   };
 
   return (
-    <div className="flex items-center gap-1 min-w-0 flex-1 mx-4">
+    <div className="flex items-center gap-1.5 min-w-0 flex-1 mx-4">
       {/* Scrollable tabs */}
       <div
         ref={scrollRef}
-        className="flex items-center gap-1 overflow-x-auto scrollbar-none min-w-0 flex-1"
+        className="flex items-center gap-1.5 overflow-x-auto scrollbar-none min-w-0 flex-1"
       >
         {schedules.map((schedule) => {
           const isActive = schedule.id === activeScheduleId;
@@ -76,8 +76,8 @@ export default function ScheduleTabs() {
                     if (e.key === "Enter") handleRename(schedule.id);
                     if (e.key === "Escape") setRenamingId(null);
                   }}
-                  className="h-8 px-3 text-sm rounded-xl border border-primary bg-card text-foreground
-                    outline-none min-w-[80px] max-w-[160px]"
+                  className="h-8 px-3 text-sm rounded-full bg-[var(--color-surface-container-highest)] text-foreground
+                    outline-none focus:shadow-[inset_0_0_0_1.5px_var(--color-primary)] min-w-[80px] max-w-[160px]"
                 />
               </div>
             );
@@ -92,11 +92,11 @@ export default function ScheduleTabs() {
                 setRenameValue(schedule.name);
               }}
               onContextMenu={(e) => handleContextMenu(e, schedule.id)}
-              className={`relative shrink-0 flex items-center gap-1.5 h-8 px-3 rounded-xl text-sm font-medium
-                transition-colors cursor-pointer select-none max-w-[180px]
+              className={`relative shrink-0 flex items-center gap-1.5 h-8 px-4 rounded-full text-sm font-medium
+                transition-all duration-200 cursor-pointer select-none max-w-[180px] active:scale-[0.98]
                 ${isActive
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                  ? "bg-primary text-primary-foreground shadow-soft"
+                  : "bg-[var(--color-surface-variant)] text-[var(--color-on-surface-variant)] hover:bg-[var(--color-surface-container-high)]"
                 }`}
               title={`${schedule.name} — double-click to rename`}
             >
@@ -114,9 +114,9 @@ export default function ScheduleTabs() {
       {/* Add tab button */}
       <button
         onClick={handleCreate}
-        className="shrink-0 h-8 w-8 rounded-xl flex items-center justify-center
-          text-muted-foreground hover:bg-accent hover:text-foreground
-          transition-colors cursor-pointer"
+        className="shrink-0 h-8 w-8 rounded-full flex items-center justify-center
+          text-muted-foreground hover:bg-[var(--color-surface-container-high)] hover:text-foreground
+          transition-all duration-200 cursor-pointer active:scale-[0.98]"
         title="New Schedule"
       >
         <Plus className="h-4 w-4" />
@@ -126,7 +126,7 @@ export default function ScheduleTabs() {
       {contextMenu && (
         <div
           ref={menuRef}
-          className="fixed z-[200] w-44 bg-card rounded-xl border border-border shadow-card overflow-hidden animate-scale-in"
+          className="fixed z-[200] w-44 glass-card rounded-2xl shadow-ambient overflow-hidden animate-scale-in"
           style={{ left: contextMenu.x, top: contextMenu.y }}
         >
           <button
@@ -139,7 +139,7 @@ export default function ScheduleTabs() {
               setContextMenu(null);
             }}
             className="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm text-foreground
-              hover:bg-accent transition-colors cursor-pointer"
+              hover:bg-[var(--color-surface-container-high)] transition-all duration-200 cursor-pointer"
           >
             <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
             Rename
@@ -150,7 +150,7 @@ export default function ScheduleTabs() {
               setContextMenu(null);
             }}
             className="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm text-foreground
-              hover:bg-accent transition-colors cursor-pointer"
+              hover:bg-[var(--color-surface-container-high)] transition-all duration-200 cursor-pointer"
           >
             <Copy className="h-3.5 w-3.5 text-muted-foreground" />
             Duplicate
@@ -162,7 +162,7 @@ export default function ScheduleTabs() {
                 setContextMenu(null);
               }}
               className="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm text-destructive
-                hover:bg-destructive/5 transition-colors cursor-pointer"
+                hover:bg-destructive/5 transition-all duration-200 cursor-pointer"
             >
               <Trash2 className="h-3.5 w-3.5" />
               Delete

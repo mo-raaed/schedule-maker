@@ -54,11 +54,10 @@ export default function Modal({
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/40 animate-fade-in" />
 
-      {/* Panel — slides up on mobile, scales on desktop */}
+      {/* Panel — glassmorphism */}
       <div
-        className={`relative w-full ${maxWidth} bg-card rounded-t-2xl sm:rounded-2xl shadow-card
-          border border-border/50 overflow-hidden
-          animate-slide-up sm:animate-scale-in`}
+        className={`relative w-full ${maxWidth} glass-card rounded-t-3xl sm:rounded-3xl shadow-ambient
+          overflow-hidden animate-slide-up sm:animate-scale-in`}
       >
         {/* Header */}
         {title && (
@@ -66,7 +65,7 @@ export default function Modal({
             <h2 className="text-lg font-semibold text-foreground">{title}</h2>
             <button
               onClick={onClose}
-              className="p-2 rounded-full hover:bg-accent transition-colors text-muted-foreground cursor-pointer"
+              className="p-2 rounded-full hover:bg-[var(--color-surface-container-high)] transition-all duration-200 text-muted-foreground cursor-pointer active:scale-[0.98]"
             >
               <X className="h-4 w-4" />
             </button>

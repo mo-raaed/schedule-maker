@@ -34,6 +34,7 @@ interface ScheduleState {
 
   // Sync helpers
   setSchedules: (schedules: Schedule[]) => void;
+  syncFromConvex: (schedules: Schedule[]) => void;
   markSynced: (localId: string, convexId: string) => void;
 }
 
@@ -195,6 +196,10 @@ export const useScheduleStore = create<ScheduleState>()(
       // ── Sync ──
 
       setSchedules: (schedules) => {
+        set({ schedules });
+      },
+
+      syncFromConvex: (schedules) => {
         set({ schedules });
       },
 

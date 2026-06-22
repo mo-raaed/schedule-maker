@@ -19,6 +19,7 @@ export const settingsValidator = v.object({
   timeIncrement: v.number(),     // 15 | 30 | 60
   startHour: v.number(),         // 0–23
   endHour: v.number(),           // 0–23
+  clockFormat: v.optional(v.string()), // "12h" | "24h" — optional for backward compat
 });
 
 export default defineSchema({
@@ -27,6 +28,7 @@ export default defineSchema({
     clerkId: v.string(),
     email: v.string(),
     name: v.optional(v.string()),
+    lastActiveScheduleId: v.optional(v.string()),
   }).index("by_clerkId", ["clerkId"]),
 
   // Schedules table — general-purpose task-based schedules

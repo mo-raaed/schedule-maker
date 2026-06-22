@@ -83,11 +83,12 @@ export default function DataModal({ open, onClose }: DataModalProps) {
         <button
           onClick={handleExportJson}
           disabled={!schedule}
-          className="w-full flex items-center gap-3 p-4 rounded-2xl border-2 border-border
-            hover:border-primary/30 hover:bg-accent/50 transition-colors duration-150 cursor-pointer
+          className="w-full flex items-center gap-3 p-4 rounded-2xl
+            bg-[var(--color-surface-container)] hover:bg-[var(--color-surface-container-high)]
+            transition-all duration-200 cursor-pointer active:scale-[0.98]
             disabled:opacity-50 disabled:cursor-not-allowed text-left"
         >
-          <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+          <div className="h-10 w-10 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
             <Download className="h-5 w-5 text-primary" />
           </div>
           <div>
@@ -104,9 +105,10 @@ export default function DataModal({ open, onClose }: DataModalProps) {
             onChange={handleImportJson}
             className="hidden"
           />
-          <div className="w-full flex items-center gap-3 p-4 rounded-2xl border-2 border-dashed border-border
-            hover:border-primary/30 hover:bg-accent/50 transition-colors duration-150 cursor-pointer text-left">
-            <div className="h-10 w-10 rounded-xl bg-muted flex items-center justify-center shrink-0">
+          <div className="w-full flex items-center gap-3 p-4 rounded-2xl
+            bg-[var(--color-surface-container-low)] hover:bg-[var(--color-surface-container)]
+            transition-all duration-200 cursor-pointer active:scale-[0.98] text-left">
+            <div className="h-10 w-10 rounded-2xl bg-[var(--color-surface-container-high)] flex items-center justify-center shrink-0">
               <Upload className="h-5 w-5 text-muted-foreground" />
             </div>
             <div>
