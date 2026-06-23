@@ -1,8 +1,8 @@
 import { Authenticated, Unauthenticated, useMutation } from "convex/react";
 import { useEffect, useRef, useState } from "react";
 import { api } from "../convex/_generated/api";
-import {
   SignInButton,
+  SignUpButton,
 } from "@clerk/clerk-react";
 import { Calendar, ArrowRight, Moon, Sun, Sparkles, GripVertical, FileDown } from "lucide-react";
 import ScheduleBuilder from "./ScheduleBuilder";
@@ -134,28 +134,36 @@ function LandingPage({ onGuestMode }: { onGuestMode: () => void }) {
           </div>
 
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <button
-              onClick={onGuestMode}
-              className="w-full sm:w-auto min-w-[200px] px-8 py-4 rounded-full gradient-primary text-white
-                font-semibold hover:brightness-110 transition-all duration-200 shadow-ambient
-                cursor-pointer flex items-center justify-center gap-2 active:scale-[0.98]"
-            >
-              Start Building
-              <ArrowRight className="h-4 w-4" />
-            </button>
-            <SignInButton mode="modal">
-              <button className="w-full sm:w-auto min-w-[200px] px-8 py-4 rounded-full
-                bg-transparent font-medium hover:bg-[var(--color-surface-container-high)] transition-all duration-200
-                cursor-pointer text-[var(--color-primary)] border-[1.5px] border-[var(--color-outline-variant)]/15
-                active:scale-[0.98]">
-                Sign In to Save
+          <div className="flex flex-col items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto">
+              <SignInButton mode="modal">
+                <button className="w-full sm:w-auto min-w-[200px] px-8 py-4 rounded-full gradient-primary text-white
+                  font-semibold hover:brightness-110 transition-all duration-200 shadow-ambient
+                  cursor-pointer flex items-center justify-center gap-2 active:scale-[0.98]">
+                  Sign In to Save
+                </button>
+              </SignInButton>
+              <button
+                onClick={onGuestMode}
+                className="w-full sm:w-auto min-w-[200px] px-8 py-4 rounded-full
+                  bg-transparent font-medium hover:bg-[var(--color-surface-container-high)] transition-all duration-200
+                  cursor-pointer text-[var(--color-primary)] border-[1.5px] border-[var(--color-outline-variant)]/15
+                  active:scale-[0.98]"
+              >
+                Start Building
+                <ArrowRight className="h-4 w-4 ml-2 inline-block" />
               </button>
-            </SignInButton>
+            </div>
+            
+            <SignUpButton mode="modal">
+              <button className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer mt-2 underline decoration-muted-foreground/30 hover:decoration-foreground/50 underline-offset-4">
+                Create a new account
+              </button>
+            </SignUpButton>
           </div>
 
           <p className="mt-8 text-xs text-muted-foreground">
-            No account needed to try · Sign in to save & sync across devices
+            No account needed to try · Sign in to sync across devices
           </p>
         </div>
       </div>
