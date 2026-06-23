@@ -2,6 +2,99 @@ import { useState, useRef, useEffect } from "react";
 import { useScheduleStore } from "../../store/scheduleStore";
 import { Plus, Pencil, Copy, Trash2 } from "lucide-react";
 
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  horizontalListSortingStrategy,
+  useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+
+function SortableTab({
+  schedule,
+  isActive,
+  renamingId,
+  renameValue,
+  renameInputRef,
+  setRenameValue,
+  handleRename,
+  setRenamingId,
+  setActiveSchedule,
+  handleContextMenu,
+}: any) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: schedule.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  if (renamingId === schedule.id) {
+    return (
+      <div ref={setNodeRef} style={style} className="flex items-center shrink-0">
+        <input
+          ref={renameInputRef}
+          value={renameValue}
+          onChange={(e) => setRenameValue(e.target.value)}
+          onBlur={() => handleRename(schedule.id)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleRename(schedule.id);
+            if (e.key === "Escape") setRenamingId(null);
+          }}
+          className="h-8 px-3 text-sm rounded-full bg-[var(--color-surface-container-highest)] text-foreground
+            outline-none focus:shadow-[inset_0_0_0_1.5px_var(--color-primary)] min-w-[80px] max-w-[160px]"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <button
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      onClick={() => setActiveSchedule(schedule.id)}
+      onDoubleClick={() => {
+        setRenamingId(schedule.id);
+        setRenameValue(schedule.name);
+      }}
+      onContextMenu={(e) => handleContextMenu(e, schedule.id)}
+      className={`relative shrink-0 flex items-center gap-1.5 h-8 px-4 rounded-full text-sm font-medium
+        transition-colors duration-200 cursor-grab active:cursor-grabbing select-none max-w-[180px] active:scale-[0.98]
+        ${isActive
+          ? "bg-primary text-primary-foreground shadow-soft"
+          : "bg-[var(--color-surface-variant)] text-[var(--color-on-surface-variant)] hover:bg-[var(--color-surface-container-high)]"
+        }`}
+      title={`${schedule.name} — double-click to rename`}
+    >
+      <span className="truncate">{schedule.name}</span>
+      {schedule.tasks.length > 0 && (
+        <span className={`text-[10px] font-normal shrink-0 ${isActive ? "opacity-70" : "opacity-50"}`}>
+          {schedule.tasks.length}
+        </span>
+      )}
+    </button>
+  );
+}
+
 export default function ScheduleTabs() {
   const schedules = useScheduleStore((s) => s.schedules);
   const activeScheduleId = useScheduleStore((s) => s.activeScheduleId);
@@ -10,6 +103,7 @@ export default function ScheduleTabs() {
   const deleteSchedule = useScheduleStore((s) => s.deleteSchedule);
   const renameSchedule = useScheduleStore((s) => s.renameSchedule);
   const duplicateSchedule = useScheduleStore((s) => s.duplicateSchedule);
+  const reorderSchedules = useScheduleStore((s) => s.reorderSchedules);
 
   const [contextMenu, setContextMenu] = useState<{ id: string; x: number; y: number } | null>(null);
   const [renamingId, setRenamingId] = useState<string | null>(null);
@@ -17,6 +111,24 @@ export default function ScheduleTabs() {
   const menuRef = useRef<HTMLDivElement>(null);
   const renameInputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      reorderSchedules(active.id as string, over.id as string);
+    }
+  };
 
   // Close context menu on outside click
   useEffect(() => {
@@ -57,59 +169,37 @@ export default function ScheduleTabs() {
   return (
     <div className="flex items-center gap-1.5 min-w-0 flex-1 mx-4">
       {/* Scrollable tabs */}
-      <div
-        ref={scrollRef}
-        className="flex items-center gap-1.5 overflow-x-auto scrollbar-none min-w-0 flex-1"
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
       >
-        {schedules.map((schedule) => {
-          const isActive = schedule.id === activeScheduleId;
-
-          if (renamingId === schedule.id) {
-            return (
-              <div key={schedule.id} className="flex items-center shrink-0">
-                <input
-                  ref={renameInputRef}
-                  value={renameValue}
-                  onChange={(e) => setRenameValue(e.target.value)}
-                  onBlur={() => handleRename(schedule.id)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") handleRename(schedule.id);
-                    if (e.key === "Escape") setRenamingId(null);
-                  }}
-                  className="h-8 px-3 text-sm rounded-full bg-[var(--color-surface-container-highest)] text-foreground
-                    outline-none focus:shadow-[inset_0_0_0_1.5px_var(--color-primary)] min-w-[80px] max-w-[160px]"
-                />
-              </div>
-            );
-          }
-
-          return (
-            <button
-              key={schedule.id}
-              onClick={() => setActiveSchedule(schedule.id)}
-              onDoubleClick={() => {
-                setRenamingId(schedule.id);
-                setRenameValue(schedule.name);
-              }}
-              onContextMenu={(e) => handleContextMenu(e, schedule.id)}
-              className={`relative shrink-0 flex items-center gap-1.5 h-8 px-4 rounded-full text-sm font-medium
-                transition-all duration-200 cursor-pointer select-none max-w-[180px] active:scale-[0.98]
-                ${isActive
-                  ? "bg-primary text-primary-foreground shadow-soft"
-                  : "bg-[var(--color-surface-variant)] text-[var(--color-on-surface-variant)] hover:bg-[var(--color-surface-container-high)]"
-                }`}
-              title={`${schedule.name} — double-click to rename`}
-            >
-              <span className="truncate">{schedule.name}</span>
-              {schedule.tasks.length > 0 && (
-                <span className={`text-[10px] font-normal shrink-0 ${isActive ? "opacity-70" : "opacity-50"}`}>
-                  {schedule.tasks.length}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
+        <div
+          ref={scrollRef}
+          className="flex items-center gap-1.5 overflow-x-auto scrollbar-none min-w-0 flex-1"
+        >
+          <SortableContext
+            items={schedules.map((s) => s.id)}
+            strategy={horizontalListSortingStrategy}
+          >
+            {schedules.map((schedule) => (
+              <SortableTab
+                key={schedule.id}
+                schedule={schedule}
+                isActive={schedule.id === activeScheduleId}
+                renamingId={renamingId}
+                renameValue={renameValue}
+                renameInputRef={renameInputRef}
+                setRenameValue={setRenameValue}
+                handleRename={handleRename}
+                setRenamingId={setRenamingId}
+                setActiveSchedule={setActiveSchedule}
+                handleContextMenu={handleContextMenu}
+              />
+            ))}
+          </SortableContext>
+        </div>
+      </DndContext>
 
       {/* Add tab button */}
       <button

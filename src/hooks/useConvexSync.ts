@@ -54,6 +54,7 @@ export function useConvexSync(userReady: boolean) {
         },
         isPublic: remote.isPublic,
         shareId: remote.shareId,
+        order: remote.order,
         createdAt: remote.createdAt,
         updatedAt: remote.updatedAt,
       })),
@@ -70,6 +71,7 @@ export function useConvexSync(userReady: boolean) {
           scheduleId: convexId,
           tasks: schedule.tasks,
           settings: schedule.settings,
+          order: schedule.order,
         });
       } catch (err) {
         console.error("Failed to push schedule to Convex:", err);
@@ -92,7 +94,9 @@ export function useConvexSync(userReady: boolean) {
       hasSynced.current = true;
       const localSchedules = useScheduleStore.getState().schedules;
       const guestSchedules = localSchedules.filter((s) => !s.convexId);
-      const merged = [...remoteSchedules, ...guestSchedules];
+      const merged = [...remoteSchedules, ...guestSchedules].sort(
+        (a, b) => (a.order ?? 0) - (b.order ?? 0)
+      );
 
       isSyncing.current = true;
       syncFromConvex(merged);
@@ -119,7 +123,9 @@ export function useConvexSync(userReady: boolean) {
 
       const localSchedules = useScheduleStore.getState().schedules;
       const guestSchedules = localSchedules.filter((s) => !s.convexId);
-      const merged = [...remoteSchedules, ...guestSchedules];
+      const merged = [...remoteSchedules, ...guestSchedules].sort(
+        (a, b) => (a.order ?? 0) - (b.order ?? 0)
+      );
 
       isSyncing.current = true;
       syncFromConvex(merged);
@@ -169,6 +175,7 @@ export function useConvexSync(userReady: boolean) {
               name: curr.name,
               tasks: curr.tasks,
               settings: curr.settings,
+              order: curr.order,
             }).catch((err) =>
               console.error("Convex update failed:", err)
             );

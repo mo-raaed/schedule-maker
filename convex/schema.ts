@@ -39,6 +39,7 @@ export default defineSchema({
     settings: settingsValidator,
     isPublic: v.boolean(),
     shareId: v.optional(v.string()),
+    order: v.optional(v.number()),
     createdAt: v.number(),
     updatedAt: v.number(),
   })

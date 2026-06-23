@@ -59,6 +59,7 @@ export const getMySchedules = query({
       settings: s.settings,
       isPublic: s.isPublic,
       shareId: s.shareId,
+      order: s.order,
       createdAt: s.createdAt,
       updatedAt: s.updatedAt,
     }));
@@ -98,6 +99,7 @@ export const getPublicSchedule = query({
       tasks: schedule.tasks,
       settings: schedule.settings,
       shareId: schedule.shareId,
+      order: schedule.order,
     };
   },
 });
@@ -117,6 +119,7 @@ export const createSchedule = mutation({
       tasks: [],
       settings: DEFAULT_SETTINGS,
       isPublic: false,
+      order: now,
       createdAt: now,
       updatedAt: now,
     });
@@ -130,6 +133,7 @@ export const updateSchedule = mutation({
     name: v.optional(v.string()),
     tasks: v.optional(v.array(taskValidator)),
     settings: v.optional(settingsValidator),
+    order: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const user = await getAuthenticatedUser(ctx);
@@ -141,6 +145,7 @@ export const updateSchedule = mutation({
     if (args.name !== undefined) updates.name = args.name;
     if (args.tasks !== undefined) updates.tasks = args.tasks;
     if (args.settings !== undefined) updates.settings = args.settings;
+    if (args.order !== undefined) updates.order = args.order;
     await ctx.db.patch(args.scheduleId, updates);
   },
 });

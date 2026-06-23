@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { v4 as uuid } from "uuid";
+import { arrayMove } from "@dnd-kit/sortable";
 import type { Schedule, Task, ScheduleSettings, PaletteMode } from "../lib/types";
 import { DEFAULT_SETTINGS } from "../lib/types";
 
@@ -19,6 +20,7 @@ interface ScheduleState {
   renameSchedule: (id: string, name: string) => void;
   setActiveSchedule: (id: string) => void;
   duplicateSchedule: (id: string) => string;
+  reorderSchedules: (activeId: string, overId: string) => void;
 
   // Task CRUD
   addTask: (task: Omit<Task, "id">) => string;
@@ -114,6 +116,22 @@ export const useScheduleStore = create<ScheduleState>()(
           activeScheduleId: newId,
         }));
         return newId;
+      },
+
+      reorderSchedules: (activeId: string, overId: string) => {
+        set((state) => {
+          const oldIndex = state.schedules.findIndex((s) => s.id === activeId);
+          const newIndex = state.schedules.findIndex((s) => s.id === overId);
+          if (oldIndex === -1 || newIndex === -1) return state;
+
+          const newSchedules = arrayMove(state.schedules, oldIndex, newIndex);
+          const updated = newSchedules.map((s, idx) => ({
+            ...s,
+            order: idx,
+            updatedAt: Date.now()
+          }));
+          return { schedules: updated };
+        });
       },
 
       // ── Task CRUD (always on active schedule) ──
