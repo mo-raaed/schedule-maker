@@ -126,7 +126,7 @@ export default function ScheduleTabs() {
       {contextMenu && (
         <div
           ref={menuRef}
-          className="fixed z-[200] w-44 glass-card rounded-2xl shadow-ambient overflow-hidden animate-scale-in"
+          className="fixed z-[200] w-44 bg-[var(--color-surface-container)] border border-[var(--color-outline-variant)]/20 rounded-xl shadow-ambient p-1 animate-scale-in"
           style={{ left: contextMenu.x, top: contextMenu.y }}
         >
           <button
@@ -138,8 +138,8 @@ export default function ScheduleTabs() {
               }
               setContextMenu(null);
             }}
-            className="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm text-foreground
-              hover:bg-[var(--color-surface-container-high)] transition-all duration-200 cursor-pointer"
+            className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-foreground rounded-lg
+              hover:bg-[var(--color-surface-container-high)] transition-colors duration-150 cursor-pointer"
           >
             <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
             Rename
@@ -149,8 +149,8 @@ export default function ScheduleTabs() {
               duplicateSchedule(contextMenu.id);
               setContextMenu(null);
             }}
-            className="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm text-foreground
-              hover:bg-[var(--color-surface-container-high)] transition-all duration-200 cursor-pointer"
+            className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-foreground rounded-lg
+              hover:bg-[var(--color-surface-container-high)] transition-colors duration-150 cursor-pointer"
           >
             <Copy className="h-3.5 w-3.5 text-muted-foreground" />
             Duplicate
@@ -161,8 +161,8 @@ export default function ScheduleTabs() {
                 deleteSchedule(contextMenu.id);
                 setContextMenu(null);
               }}
-              className="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm text-destructive
-                hover:bg-destructive/5 transition-all duration-200 cursor-pointer"
+              className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-destructive rounded-lg
+                hover:bg-destructive/10 transition-colors duration-150 cursor-pointer"
             >
               <Trash2 className="h-3.5 w-3.5" />
               Delete
