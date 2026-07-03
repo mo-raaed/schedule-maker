@@ -75,7 +75,7 @@ export default function SharedScheduleView({ shareId }: SharedScheduleViewProps)
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-background text-foreground">
       {/* Header */}
-      <header className="shrink-0 flex items-center justify-between px-4 h-14 border-b border-border bg-card">
+      <header className="shrink-0 flex items-center justify-between px-4 h-14 bg-card">
         <div className="flex items-center gap-3">
           <a
             href="/"
@@ -84,9 +84,9 @@ export default function SharedScheduleView({ shareId }: SharedScheduleViewProps)
             <ArrowLeft className="h-4 w-4" />
             <Calendar className="h-5 w-5 text-primary" />
           </a>
-          <div className="h-5 w-px bg-border" />
+          <div className="ml-1" />
           <h1 className="font-semibold text-sm">{result.name}</h1>
-          <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">Shared</span>
+          <span className="text-xs text-muted-foreground bg-[var(--color-surface-container-high)] px-2 py-0.5 rounded-full">Shared</span>
         </div>
         <Button
           variant="secondary"

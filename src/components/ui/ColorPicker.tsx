@@ -15,7 +15,7 @@ export default function ColorPicker({ value, onChange, paletteMode }: ColorPicke
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2 mb-1">
-        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+        <span className="uppercase text-[10px] tracking-[0.05em] font-semibold text-[var(--color-on-surface-variant)]">
           {paletteMode === "pastel" ? "Pastel" : "Bold"} Colors
         </span>
       </div>

@@ -46,16 +46,16 @@ export default function TaskBlock({
         e.stopPropagation();
         onClick();
       }}
-      className={`absolute left-1 right-1 rounded-xl overflow-hidden cursor-pointer
-        select-none
-        ${isDragging ? "opacity-40" : "shadow-sm"}
+      className={`absolute left-1 right-1 rounded-2xl overflow-hidden cursor-pointer
+        select-none transition-shadow duration-200
+        ${isDragging ? "opacity-40" : "shadow-soft hover:shadow-card"}
         ${isOverlapping ? "ring-2 ring-red-400/60" : ""}`}
       style={{
         top: topPx,
         height: heightPx,
         backgroundColor: colors.bg,
         color: colors.text,
-        borderLeft: `4px solid ${colors.border}`,
+        borderLeft: `3px solid ${colors.border}`,
         zIndex: isDragging ? 50 : 10,
       }}
     >

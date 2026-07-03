@@ -117,23 +117,22 @@ export default function TimePicker({
           onFocus={() => setShowDropdown(true)}
           onBlur={handleBlur}
           placeholder="HH:mm"
-          className="w-full rounded-xl border border-border bg-muted/40 pl-9 pr-3 py-2.5
-            text-sm text-foreground transition-colors duration-150
-            focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50
-            hover:border-primary/30 hover:bg-muted/60"
+          className="w-full rounded-2xl bg-[var(--color-surface-container-highest)] pl-9 pr-3 py-2.5
+            text-sm text-foreground transition-all duration-200
+            focus:outline-none focus:shadow-[inset_0_0_0_1.5px_var(--color-primary)]
+            hover:bg-[var(--color-surface-container-high)]"
         />
 
         {/* Suggestions dropdown */}
         {showDropdown && (
-          <div className="absolute z-50 mt-1 w-full max-h-48 overflow-y-auto rounded-xl border border-border
-            bg-card shadow-sm border-border">
+          <div className="absolute z-50 mt-1 w-full max-h-48 overflow-y-auto rounded-2xl glass-card shadow-ambient">
             {suggestions.map((time) => (
               <button
                 key={time}
                 type="button"
                 onMouseDown={() => handleSelect(time)}
-                className={`w-full px-3 py-2.5 text-sm text-left transition-colors cursor-pointer
-                  hover:bg-accent first:rounded-t-xl last:rounded-b-xl
+                className={`w-full px-3 py-2.5 text-sm text-left transition-all duration-200 cursor-pointer
+                  hover:bg-[var(--color-surface-container-high)] first:rounded-t-2xl last:rounded-b-2xl
                   ${time === value ? "bg-primary/5 text-primary font-medium" : "text-foreground"}`}
               >
                 {formatTimeDisplay(time, clockFormat)}

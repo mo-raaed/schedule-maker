@@ -84,7 +84,7 @@ export default function ScheduleBuilder() {
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-background">
       {/* ── Header ── */}
-      <header className="shrink-0 flex items-center justify-between px-4 h-14 border-b border-border bg-card z-30">
+      <header className="shrink-0 flex items-center justify-between px-4 h-14 bg-card z-30">
         {/* Left — Logo */}
         <div className="flex items-center gap-2 shrink-0">
           <Calendar className="h-5 w-5 text-primary" />
@@ -106,7 +106,7 @@ export default function ScheduleBuilder() {
           >
             {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
-          <div className="h-5 w-px bg-border ml-0.5" />
+          <div className="ml-1" />
           <Authenticated>
             <UserButton
               appearance={{ elements: { avatarBox: "h-8 w-8" } }}
@@ -197,7 +197,7 @@ export default function ScheduleBuilder() {
           ].map(([key, desc]) => (
             <div key={key} className="flex items-center justify-between">
               <span className="text-muted-foreground">{desc}</span>
-              <kbd className="px-2 py-0.5 bg-muted rounded-lg text-xs font-mono font-medium">
+              <kbd className="px-2 py-0.5 bg-[var(--color-surface-container-high)] rounded-full text-xs font-mono font-medium">
                 {key}
               </kbd>
             </div>

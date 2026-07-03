@@ -72,6 +72,7 @@ export interface Schedule {
   settings: ScheduleSettings;
   isPublic: boolean;
   shareId?: string;
+  order?: number;
   createdAt: number;
   updatedAt: number;
 }

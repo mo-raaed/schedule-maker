@@ -14,6 +14,7 @@ export const getCurrentUser = query({
       clerkId: v.string(),
       email: v.string(),
       name: v.optional(v.string()),
+      lastActiveScheduleId: v.optional(v.string()),
     }),
     v.null()
   ),
@@ -77,5 +78,38 @@ export const upsertUser = mutation({
     });
 
     return userId;
+  },
+});
+
+/**
+ * Save the user's last active schedule ID to the cloud.
+ */
+export const setLastActiveSchedule = mutation({
+  args: { scheduleId: v.string() },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+    if (!user) throw new Error("User not found");
+    await ctx.db.patch(user._id, { lastActiveScheduleId: args.scheduleId });
+  },
+});
+
+/**
+ * Get the user's last active schedule ID from the cloud.
+ */
+export const getLastActiveSchedule = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return null;
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+    return user?.lastActiveScheduleId ?? null;
   },
 });
