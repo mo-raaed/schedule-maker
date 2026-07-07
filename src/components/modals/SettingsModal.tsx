@@ -26,7 +26,7 @@ export default function SettingsModal({ open, onClose }: SettingsModalProps) {
       <div className="space-y-6">
         {/* ── Days Section ── */}
         <div className="space-y-4">
-          <h3 className="uppercase text-[10px] tracking-[0.1em] font-semibold text-[var(--color-on-surface-variant)]">
+          <h3 className="uppercase text-[10px] tracking-[0.1em] font-semibold text-muted-foreground">
             Days
           </h3>
           <Toggle
@@ -53,7 +53,7 @@ export default function SettingsModal({ open, onClose }: SettingsModalProps) {
 
         {/* ── Time Section ── */}
         <div className="space-y-4">
-          <h3 className="uppercase text-[10px] tracking-[0.1em] font-semibold text-[var(--color-on-surface-variant)]">
+          <h3 className="uppercase text-[10px] tracking-[0.1em] font-semibold text-muted-foreground">
             Time
           </h3>
           <Select
@@ -98,7 +98,7 @@ export default function SettingsModal({ open, onClose }: SettingsModalProps) {
 
         {/* ── Display Section ── */}
         <div className="space-y-4">
-          <h3 className="uppercase text-[10px] tracking-[0.1em] font-semibold text-[var(--color-on-surface-variant)]">
+          <h3 className="uppercase text-[10px] tracking-[0.1em] font-semibold text-muted-foreground">
             Display
           </h3>
           <Select

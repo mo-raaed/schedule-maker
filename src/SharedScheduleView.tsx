@@ -31,7 +31,7 @@ export default function SharedScheduleView({ shareId }: SharedScheduleViewProps)
       <div className="min-h-screen flex items-center justify-center bg-background text-center px-4">
         <div>
           <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <h1 className="text-2xl font-bold mb-2">Schedule Not Found</h1>
+          <h1 className="font-display text-2xl font-bold mb-2">Schedule Not Found</h1>
           <p className="text-muted-foreground mb-6">
             This shared link may have expired or been removed.
           </p>
@@ -75,18 +75,18 @@ export default function SharedScheduleView({ shareId }: SharedScheduleViewProps)
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-background text-foreground">
       {/* Header */}
-      <header className="shrink-0 flex items-center justify-between px-4 h-14 bg-card">
+      <header className="shrink-0 flex items-center justify-between px-4 h-14 glass">
         <div className="flex items-center gap-3">
           <a
             href="/"
             className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
-            <Calendar className="h-5 w-5 text-primary" />
+            <Calendar className="h-5 w-5 text-accent" />
           </a>
           <div className="ml-1" />
-          <h1 className="font-semibold text-sm">{result.name}</h1>
-          <span className="text-xs text-muted-foreground bg-[var(--color-surface-container-high)] px-2 py-0.5 rounded-full">Shared</span>
+          <h1 className="font-display font-semibold text-sm">{result.name}</h1>
+          <span className="text-xs text-muted-foreground bg-surface-3 px-2 py-0.5 rounded-full">Shared</span>
         </div>
         <Button
           variant="secondary"

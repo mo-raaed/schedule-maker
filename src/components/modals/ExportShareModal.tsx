@@ -98,7 +98,7 @@ export default function ExportShareModal({ open, onClose }: ExportShareModalProp
       <div className="space-y-6">
         {/* ── Export Section ── */}
         <div className="space-y-4">
-          <h3 className="uppercase text-[10px] tracking-[0.1em] font-semibold text-[var(--color-on-surface-variant)]">
+          <h3 className="uppercase text-[10px] tracking-[0.1em] font-semibold text-muted-foreground">
             Export
           </h3>
 
@@ -107,10 +107,10 @@ export default function ExportShareModal({ open, onClose }: ExportShareModalProp
             <button
               type="button"
               onClick={() => setFormat("pdf")}
-              className={`flex flex-col items-center gap-2 p-4 rounded-2xl transition-all duration-200 cursor-pointer active:scale-[0.98]
+              className={`flex flex-col items-center gap-2 p-4 rounded-md transition-all duration-200 cursor-pointer active:scale-[0.98]
                 ${format === "pdf"
                   ? "bg-primary/10 shadow-soft"
-                  : "bg-[var(--color-surface-container)] hover:bg-[var(--color-surface-container-high)]"
+                  : "bg-surface hover:bg-surface-3"
                 }`}
             >
               <FileText className={`h-6 w-6 ${format === "pdf" ? "text-primary" : "text-muted-foreground"}`} />
@@ -119,10 +119,10 @@ export default function ExportShareModal({ open, onClose }: ExportShareModalProp
             <button
               type="button"
               onClick={() => setFormat("png")}
-              className={`flex flex-col items-center gap-2 p-4 rounded-2xl transition-all duration-200 cursor-pointer active:scale-[0.98]
+              className={`flex flex-col items-center gap-2 p-4 rounded-md transition-all duration-200 cursor-pointer active:scale-[0.98]
                 ${format === "png"
                   ? "bg-primary/10 shadow-soft"
-                  : "bg-[var(--color-surface-container)] hover:bg-[var(--color-surface-container-high)]"
+                  : "bg-surface hover:bg-surface-3"
                 }`}
             >
               <FileImage className={`h-6 w-6 ${format === "png" ? "text-primary" : "text-muted-foreground"}`} />
@@ -143,7 +143,7 @@ export default function ExportShareModal({ open, onClose }: ExportShareModalProp
 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <label className="block uppercase text-[10px] tracking-[0.05em] font-semibold text-[var(--color-on-surface-variant)]">
+              <label className="block uppercase text-[10px] tracking-[0.05em] font-semibold text-muted-foreground">
                 Title <span className="text-xs normal-case text-muted-foreground">(opt.)</span>
               </label>
               <input
@@ -151,13 +151,13 @@ export default function ExportShareModal({ open, onClose }: ExportShareModalProp
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder={schedule.name}
-                className="w-full rounded-2xl bg-[var(--color-surface-container-highest)] px-3 py-2.5 text-sm text-foreground
-                  transition-all duration-200 focus:outline-none focus:shadow-[inset_0_0_0_1.5px_var(--color-primary)]
+                className="w-full rounded-md bg-surface-2 border border-border px-3 py-2.5 text-sm text-foreground
+                  transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring/70
                   placeholder:text-muted-foreground"
               />
             </div>
             <div className="space-y-1.5">
-              <label className="block uppercase text-[10px] tracking-[0.05em] font-semibold text-[var(--color-on-surface-variant)]">
+              <label className="block uppercase text-[10px] tracking-[0.05em] font-semibold text-muted-foreground">
                 Subtitle <span className="text-xs normal-case text-muted-foreground">(opt.)</span>
               </label>
               <input
@@ -165,8 +165,8 @@ export default function ExportShareModal({ open, onClose }: ExportShareModalProp
                 value={subtitle}
                 onChange={(e) => setSubtitle(e.target.value)}
                 placeholder="e.g., Spring 2026"
-                className="w-full rounded-2xl bg-[var(--color-surface-container-highest)] px-3 py-2.5 text-sm text-foreground
-                  transition-all duration-200 focus:outline-none focus:shadow-[inset_0_0_0_1.5px_var(--color-primary)]
+                className="w-full rounded-md bg-surface-2 border border-border px-3 py-2.5 text-sm text-foreground
+                  transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring/70
                   placeholder:text-muted-foreground"
               />
             </div>
@@ -197,12 +197,12 @@ export default function ExportShareModal({ open, onClose }: ExportShareModalProp
 
         {/* ── Share Section ── */}
         <div className="space-y-4">
-          <h3 className="uppercase text-[10px] tracking-[0.1em] font-semibold text-[var(--color-on-surface-variant)]">
+          <h3 className="uppercase text-[10px] tracking-[0.1em] font-semibold text-muted-foreground">
             Share
           </h3>
 
           {/* Status */}
-          <div className="flex items-center gap-3 p-3 rounded-2xl bg-[var(--color-surface-container)]">
+          <div className="flex items-center gap-3 p-3 rounded-md bg-surface">
             {schedule.isPublic ? (
               <Globe className="h-5 w-5 text-green-500 shrink-0" />
             ) : (
@@ -224,8 +224,8 @@ export default function ExportShareModal({ open, onClose }: ExportShareModalProp
           {shareUrl && (
             <button
               onClick={handleCopy}
-              className="w-full flex items-center gap-2 p-3 rounded-2xl bg-[var(--color-surface-container-highest)]
-                hover:bg-[var(--color-surface-container-high)] transition-all duration-200 cursor-pointer group active:scale-[0.98]"
+              className="w-full flex items-center gap-2 p-3 rounded-md bg-surface-2 border border-border
+                hover:bg-surface-3 transition-all duration-200 cursor-pointer group active:scale-[0.98]"
             >
               <span className="flex-1 text-sm text-muted-foreground truncate text-left">
                 {shareUrl}

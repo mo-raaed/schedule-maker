@@ -58,8 +58,8 @@ function SortableTab({
             if (e.key === "Enter") handleRename(schedule.id);
             if (e.key === "Escape") setRenamingId(null);
           }}
-          className="h-8 px-3 text-sm rounded-full bg-[var(--color-surface-container-highest)] text-foreground
-            outline-none focus:shadow-[inset_0_0_0_1.5px_var(--color-primary)] min-w-[80px] max-w-[160px]"
+          className="h-8 px-3 text-sm rounded-full bg-surface-2 border border-border text-foreground
+            outline-none focus:ring-2 focus:ring-ring/70 min-w-[80px] max-w-[160px]"
         />
       </div>
     );
@@ -80,8 +80,8 @@ function SortableTab({
       className={`relative shrink-0 flex items-center gap-1.5 h-8 px-4 rounded-full text-sm font-medium
         transition-colors duration-200 cursor-grab active:cursor-grabbing select-none max-w-[180px] active:scale-[0.98]
         ${isActive
-          ? "bg-primary text-primary-foreground shadow-soft"
-          : "bg-[var(--color-surface-variant)] text-[var(--color-on-surface-variant)] hover:bg-[var(--color-surface-container-high)]"
+          ? "bg-primary-solid text-white shadow-soft"
+          : "bg-surface-2 text-muted-foreground hover:bg-surface-3 hover:text-foreground"
         }`}
       title={`${schedule.name} — double-click to rename`}
     >
@@ -205,7 +205,7 @@ export default function ScheduleTabs() {
       <button
         onClick={handleCreate}
         className="shrink-0 h-8 w-8 rounded-full flex items-center justify-center
-          text-muted-foreground hover:bg-[var(--color-surface-container-high)] hover:text-foreground
+          text-muted-foreground hover:bg-surface-2 hover:text-foreground
           transition-all duration-200 cursor-pointer active:scale-[0.98]"
         title="New Schedule"
       >
@@ -216,7 +216,7 @@ export default function ScheduleTabs() {
       {contextMenu && (
         <div
           ref={menuRef}
-          className="fixed z-[200] w-44 bg-[var(--color-surface-container)] border border-[var(--color-outline-variant)]/20 rounded-xl shadow-ambient p-1 animate-scale-in"
+          className="fixed z-[200] w-44 bg-surface border border-border rounded-md shadow-card-lg p-1 animate-scale-in"
           style={{ left: contextMenu.x, top: contextMenu.y }}
         >
           <button
@@ -228,8 +228,8 @@ export default function ScheduleTabs() {
               }
               setContextMenu(null);
             }}
-            className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-foreground rounded-lg
-              hover:bg-[var(--color-surface-container-high)] transition-colors duration-150 cursor-pointer"
+            className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-foreground rounded-sm
+              hover:bg-surface-2 transition-colors duration-150 cursor-pointer"
           >
             <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
             Rename
@@ -239,8 +239,8 @@ export default function ScheduleTabs() {
               duplicateSchedule(contextMenu.id);
               setContextMenu(null);
             }}
-            className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-foreground rounded-lg
-              hover:bg-[var(--color-surface-container-high)] transition-colors duration-150 cursor-pointer"
+            className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-foreground rounded-sm
+              hover:bg-surface-2 transition-colors duration-150 cursor-pointer"
           >
             <Copy className="h-3.5 w-3.5 text-muted-foreground" />
             Duplicate
@@ -251,7 +251,7 @@ export default function ScheduleTabs() {
                 deleteSchedule(contextMenu.id);
                 setContextMenu(null);
               }}
-              className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-destructive rounded-lg
+              className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-destructive rounded-sm
                 hover:bg-destructive/10 transition-colors duration-150 cursor-pointer"
             >
               <Trash2 className="h-3.5 w-3.5" />

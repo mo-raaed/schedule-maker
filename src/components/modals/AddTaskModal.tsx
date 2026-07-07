@@ -119,7 +119,7 @@ export default function AddTaskModal({
       <div className="space-y-6">
         {/* Name */}
         <div className="space-y-2">
-          <label className="block uppercase text-[10px] tracking-[0.05em] font-semibold text-[var(--color-on-surface-variant)]">
+          <label className="block uppercase text-[10px] tracking-[0.05em] font-semibold text-muted-foreground">
             Name <span className="text-destructive">*</span>
           </label>
           <input
@@ -128,15 +128,15 @@ export default function AddTaskModal({
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g., Math Lecture, Gym, Meeting"
             autoFocus
-            className="w-full rounded-2xl bg-[var(--color-surface-container-highest)] px-4 py-2.5 text-sm text-foreground
-              transition-all duration-200 focus:outline-none focus:shadow-[inset_0_0_0_1.5px_var(--color-primary)]
-              hover:bg-[var(--color-surface-container-high)] placeholder:text-muted-foreground"
+            className="w-full rounded-md bg-surface-2 border border-border px-4 py-2.5 text-sm text-foreground
+              transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring/70
+              hover:bg-surface-3 placeholder:text-muted-foreground"
           />
         </div>
 
         {/* Description */}
         <div className="space-y-2">
-          <label className="block uppercase text-[10px] tracking-[0.05em] font-semibold text-[var(--color-on-surface-variant)]">
+          <label className="block uppercase text-[10px] tracking-[0.05em] font-semibold text-muted-foreground">
             Description
           </label>
           <textarea
@@ -144,9 +144,9 @@ export default function AddTaskModal({
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Optional notes..."
             rows={2}
-            className="w-full rounded-2xl bg-[var(--color-surface-container-highest)] px-4 py-2.5 text-sm text-foreground
-              transition-all duration-200 focus:outline-none focus:shadow-[inset_0_0_0_1.5px_var(--color-primary)]
-              hover:bg-[var(--color-surface-container-high)] placeholder:text-muted-foreground resize-none"
+            className="w-full rounded-md bg-surface-2 border border-border px-4 py-2.5 text-sm text-foreground
+              transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring/70
+              hover:bg-surface-3 placeholder:text-muted-foreground resize-none"
           />
         </div>
 
@@ -155,7 +155,7 @@ export default function AddTaskModal({
 
         {/* Days Multi-select */}
         <div className="space-y-2">
-          <label className="block uppercase text-[10px] tracking-[0.05em] font-semibold text-[var(--color-on-surface-variant)]">
+          <label className="block uppercase text-[10px] tracking-[0.05em] font-semibold text-muted-foreground">
             Days <span className="text-destructive">*</span>
           </label>
           <div className="flex flex-wrap gap-2">
@@ -169,8 +169,8 @@ export default function AddTaskModal({
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer active:scale-[0.98]
                     ${
                       isSelected
-                        ? "bg-primary text-primary-foreground shadow-soft"
-                        : "bg-[var(--color-surface-variant)] text-[var(--color-on-surface-variant)] hover:bg-[var(--color-surface-container-high)]"
+                        ? "bg-primary-solid text-white shadow-soft"
+                        : "bg-surface-2 text-muted-foreground hover:bg-surface-3"
                     }`}
                 >
                   {DAY_SHORT_LABELS[day]}

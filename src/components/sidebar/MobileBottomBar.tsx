@@ -34,11 +34,11 @@ export default function MobileBottomBar({
             className="fixed inset-0 bg-black/20"
             onClick={() => setMoreOpen(false)}
           />
-          <div className="absolute bottom-16 right-3 w-44 glass-card rounded-2xl shadow-ambient overflow-hidden animate-slide-up z-50">
+          <div className="absolute bottom-16 right-3 w-44 glass-card rounded-md shadow-card-lg overflow-hidden animate-slide-up z-50">
             <button
               onClick={() => { onData(); setMoreOpen(false); }}
               className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-foreground
-                hover:bg-[var(--color-surface-container-high)] transition-all duration-200 cursor-pointer"
+                hover:bg-surface-2 transition-all duration-200 cursor-pointer"
             >
               <FileJson className="h-4 w-4 text-muted-foreground" />
               Data
@@ -46,7 +46,7 @@ export default function MobileBottomBar({
             <button
               onClick={() => { onShortcuts(); setMoreOpen(false); }}
               className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-foreground
-                hover:bg-[var(--color-surface-container-high)] transition-all duration-200 cursor-pointer"
+                hover:bg-surface-2 transition-all duration-200 cursor-pointer"
             >
               <Keyboard className="h-4 w-4 text-muted-foreground" />
               Shortcuts

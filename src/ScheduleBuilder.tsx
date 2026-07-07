@@ -84,11 +84,11 @@ export default function ScheduleBuilder() {
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-background">
       {/* ── Header ── */}
-      <header className="shrink-0 flex items-center justify-between px-4 h-14 bg-card z-30">
+      <header className="shrink-0 flex items-center justify-between px-4 h-14 glass sticky top-0 z-30">
         {/* Left — Logo */}
         <div className="flex items-center gap-2 shrink-0">
-          <Calendar className="h-5 w-5 text-primary" />
-          <span className="font-bold text-base tracking-tight hidden sm:inline">
+          <Calendar className="h-5 w-5 text-accent" />
+          <span className="font-display font-bold text-base tracking-tight hidden sm:inline">
             Schedule Maker
           </span>
         </div>
@@ -197,7 +197,7 @@ export default function ScheduleBuilder() {
           ].map(([key, desc]) => (
             <div key={key} className="flex items-center justify-between">
               <span className="text-muted-foreground">{desc}</span>
-              <kbd className="px-2 py-0.5 bg-[var(--color-surface-container-high)] rounded-full text-xs font-mono font-medium">
+              <kbd className="px-2 py-0.5 bg-surface-2 border border-border rounded-sm text-xs font-mono font-medium">
                 {key}
               </kbd>
             </div>

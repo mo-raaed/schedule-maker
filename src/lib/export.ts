@@ -37,7 +37,7 @@ function buildExportDOM(options: ExportOptions): HTMLDivElement {
   container.style.cssText = `
     position: fixed; left: -9999px; top: -9999px;
     width: ${width}px; height: ${height}px;
-    background: #ffffff; font-family: Inter, system-ui, sans-serif;
+    background: #ffffff; font-family: "Plus Jakarta Sans Variable", Inter, system-ui, sans-serif;
     padding: 32px; box-sizing: border-box; overflow: hidden;
   `;
 
@@ -47,7 +47,7 @@ function buildExportDOM(options: ExportOptions): HTMLDivElement {
 
   const h1 = document.createElement("div");
   h1.textContent = title || schedule.name;
-  h1.style.cssText = "font-size: 20px; font-weight: 700; color: #1F2937; margin-bottom: 4px;";
+  h1.style.cssText = "font-size: 20px; font-weight: 700; color: #252D6B; margin-bottom: 4px;";
   header.appendChild(h1);
 
   if (subtitle) {

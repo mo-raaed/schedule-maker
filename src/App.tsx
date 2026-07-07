@@ -5,7 +5,7 @@ import {
   SignInButton,
   SignUpButton,
 } from "@clerk/clerk-react";
-import { LazyMotion, MotionConfig } from "motion/react";
+import { LazyMotion, MotionConfig, m } from "motion/react";
 import { Calendar, ArrowRight, Moon, Sun, Sparkles, GripVertical, FileDown } from "lucide-react";
 import ScheduleBuilder from "./ScheduleBuilder";
 import { useAppSettingsStore } from "./store/scheduleStore";
@@ -67,6 +67,8 @@ function AuthenticatedApp() {
   return <ScheduleBuilder />;
 }
 
+const heroEase = [0.22, 1, 0.36, 1] as const;
+
 function LandingPage({ onGuestMode }: { onGuestMode: () => void }) {
   const darkMode = useAppSettingsStore((s) => s.darkMode);
   const toggleDarkMode = useAppSettingsStore((s) => s.toggleDarkMode);
@@ -77,7 +79,7 @@ function LandingPage({ onGuestMode }: { onGuestMode: () => void }) {
       <div className="flex items-center justify-end px-6 pt-5">
         <button
           onClick={toggleDarkMode}
-          className="p-2.5 rounded-full hover:bg-[var(--color-surface-container-high)] transition-all duration-200 text-muted-foreground hover:text-foreground cursor-pointer active:scale-[0.98]"
+          className="p-2.5 rounded-full hover:bg-surface-2 transition-all duration-200 text-muted-foreground hover:text-foreground cursor-pointer active:scale-[0.98]"
           title="Toggle Dark Mode"
         >
           {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
@@ -87,27 +89,35 @@ function LandingPage({ onGuestMode }: { onGuestMode: () => void }) {
       <div className="flex-1 flex items-center justify-center px-4 pb-16">
         <div className="max-w-2xl mx-auto text-center">
           {/* Category label */}
-          <span className="inline-block text-[10px] uppercase tracking-[0.1em] font-semibold text-muted-foreground mb-6">
+          <m.span
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: heroEase }}
+            className="inline-block text-[10px] uppercase tracking-[0.1em] font-semibold text-accent mb-6"
+          >
             Weekly Planner
-          </span>
+          </m.span>
 
           {/* Hero */}
-          <div className="mb-16">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl gradient-primary mb-8 shadow-ambient">
+          <m.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: heroEase, delay: 0.08 }}
+            className="mb-16"
+          >
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-lg bg-primary-solid mb-8 shadow-card-lg">
               <Calendar className="h-10 w-10 text-white" />
             </div>
-            <h1 className="text-[3.5rem] sm:text-[4rem] font-bold tracking-[-0.04em] leading-[1.05] mb-5 text-foreground">
+            <h1 className="font-display text-[3.5rem] sm:text-[4rem] font-bold tracking-tight leading-[1.05] mb-5 text-foreground">
               Build Your Perfect
               <br />
-              <span className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-container)] bg-clip-text text-transparent">
-                Weekly Schedule
-              </span>
+              <span className="text-primary italic">Weekly Schedule</span>
             </h1>
             <p className="text-base text-muted-foreground max-w-lg mx-auto leading-relaxed">
               A beautifully minimal schedule planner. Add tasks, drag to
               rearrange, and export a clean PDF — all in your browser.
             </p>
-          </div>
+          </m.div>
 
           {/* Features */}
           <div className="grid sm:grid-cols-3 gap-5 mb-16">
@@ -127,26 +137,34 @@ function LandingPage({ onGuestMode }: { onGuestMode: () => void }) {
                 title: "Flawless Export",
                 desc: "Download your schedule as a high-resolution PDF or PNG",
               },
-            ].map((f) => (
-              <div
+            ].map((f, i) => (
+              <m.div
                 key={f.title}
-                className="p-6 rounded-3xl bg-[var(--color-surface-container)] hover:bg-[var(--color-surface-container-high)] transition-all duration-200 shadow-soft"
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: heroEase, delay: 0.16 + i * 0.08 }}
+                className="p-6 rounded-lg bg-surface border border-border shadow-card hover-lift text-left"
               >
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-[var(--color-surface-container-highest)] mb-3 text-primary">
+                <div className="inline-flex items-center justify-center w-10 h-10 rounded-md bg-surface-2 mb-3 text-primary">
                   {f.icon}
                 </div>
-                <h3 className="font-semibold mb-1 text-foreground">{f.title}</h3>
+                <h3 className="font-display font-semibold mb-1 text-foreground">{f.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
-              </div>
+              </m.div>
             ))}
           </div>
 
           {/* CTAs */}
-          <div className="flex flex-col items-center gap-4">
+          <m.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: heroEase, delay: 0.4 }}
+            className="flex flex-col items-center gap-4"
+          >
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto">
               <SignInButton mode="modal">
-                <button className="w-full sm:w-auto min-w-[200px] px-8 py-4 rounded-full gradient-primary text-white
-                  font-semibold hover:brightness-110 transition-all duration-200 shadow-ambient
+                <button className="w-full sm:w-auto min-w-[200px] px-8 py-4 rounded-full bg-primary-solid text-white
+                  font-semibold hover:brightness-110 transition-all duration-200 shadow-card
                   cursor-pointer flex items-center justify-center gap-2 active:scale-[0.98]">
                   Sign In to Save
                 </button>
@@ -154,25 +172,25 @@ function LandingPage({ onGuestMode }: { onGuestMode: () => void }) {
               <button
                 onClick={onGuestMode}
                 className="w-full sm:w-auto min-w-[200px] px-8 py-4 rounded-full
-                  bg-transparent font-medium hover:bg-[var(--color-surface-container-high)] transition-all duration-200
-                  cursor-pointer text-[var(--color-primary)] border-[1.5px] border-[var(--color-outline-variant)]/15
+                  bg-transparent font-medium hover:bg-surface-2 transition-all duration-200
+                  cursor-pointer text-primary border border-border
                   active:scale-[0.98]"
               >
                 Start Building
                 <ArrowRight className="h-4 w-4 ml-2 inline-block" />
               </button>
             </div>
-            
+
             <SignUpButton mode="modal">
               <button className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer mt-2 underline decoration-muted-foreground/30 hover:decoration-foreground/50 underline-offset-4">
                 Create a new account
               </button>
             </SignUpButton>
-          </div>
 
-          <p className="mt-8 text-xs text-muted-foreground">
-            No account needed to try · Sign in to sync across devices
-          </p>
+            <p className="mt-4 text-xs text-muted-foreground">
+              No account needed to try · Sign in to sync across devices
+            </p>
+          </m.div>
         </div>
       </div>
     </div>
