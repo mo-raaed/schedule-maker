@@ -15,7 +15,7 @@ export default function ColorPicker({ value, onChange, paletteMode }: ColorPicke
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2 mb-1">
-        <span className="uppercase text-[10px] tracking-[0.05em] font-semibold text-[var(--color-on-surface-variant)]">
+        <span className="uppercase text-[10px] tracking-[0.05em] font-semibold text-muted-foreground">
           {paletteMode === "pastel" ? "Pastel" : "Bold"} Colors
         </span>
       </div>
@@ -45,8 +45,9 @@ export default function ColorPicker({ value, onChange, paletteMode }: ColorPicke
               type="button"
               onClick={() => onChange(hex)}
               className={`w-9 h-9 rounded-full flex items-center justify-center cursor-pointer
-                ring-offset-2 ring-offset-card
-                ${isSelected ? "ring-2 ring-primary shadow-md" : ""}`}
+                ring-offset-2 ring-offset-surface transition-transform duration-200 ease-out
+                hover:scale-110 active:scale-95
+                ${isSelected ? "ring-2 ring-ring shadow-card" : ""}`}
               style={{ backgroundColor: displayHex }}
               title={color.name}
             >

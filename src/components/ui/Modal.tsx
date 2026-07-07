@@ -52,20 +52,20 @@ export default function Modal({
       }}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/40 animate-fade-in" />
+      <div className="absolute inset-0 bg-foreground/25 dark:bg-black/50 backdrop-blur-[2px] animate-fade-in" />
 
-      {/* Panel — glassmorphism */}
+      {/* Panel */}
       <div
-        className={`relative w-full ${maxWidth} glass-card rounded-t-3xl sm:rounded-3xl shadow-ambient
+        className={`relative w-full ${maxWidth} bg-surface border border-border rounded-t-lg sm:rounded-lg shadow-card-lg
           overflow-hidden animate-slide-up sm:animate-scale-in`}
       >
         {/* Header */}
         {title && (
           <div className="flex items-center justify-between px-7 pt-6 pb-2">
-            <h2 className="text-lg font-semibold text-foreground">{title}</h2>
+            <h2 className="text-lg font-semibold font-display text-foreground">{title}</h2>
             <button
               onClick={onClose}
-              className="p-2 rounded-full hover:bg-[var(--color-surface-container-high)] transition-all duration-200 text-muted-foreground cursor-pointer active:scale-[0.98]"
+              className="p-2 rounded-full hover:bg-surface-2 transition-all duration-200 text-muted-foreground cursor-pointer active:scale-[0.98]"
             >
               <X className="h-4 w-4" />
             </button>

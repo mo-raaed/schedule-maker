@@ -18,10 +18,10 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
         <div className="relative">
           <select
             ref={ref}
-            className={`w-full appearance-none rounded-2xl bg-[var(--color-surface-container-highest)] px-3 py-2.5 pr-9
-              text-sm text-foreground transition-all duration-200 cursor-pointer
-              focus:outline-none focus:shadow-[inset_0_0_0_1.5px_var(--color-primary)]
-              hover:bg-[var(--color-surface-container-high)] ${className}`}
+            className={`w-full appearance-none rounded-md bg-surface-2 px-3 py-2.5 pr-9
+              text-sm text-foreground border border-border transition-all duration-200 cursor-pointer
+              focus:outline-none focus:ring-2 focus:ring-ring/70
+              hover:bg-surface-3 ${className}`}
             {...props}
           >
             {options.map((opt) => (
