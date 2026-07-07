@@ -239,22 +239,50 @@ export const useScheduleStore = create<ScheduleState>()(
 
 interface AppSettingsState {
   darkMode: boolean;
+  /** True once the user explicitly toggled the theme. Until then the app
+   *  follows the system preference (and the FOUC script in index.html
+   *  resolves the pre-paint class the same way). */
+  themeExplicit: boolean;
   paletteMode: PaletteMode;
   toggleDarkMode: () => void;
   setPaletteMode: (mode: PaletteMode) => void;
 }
 
+const systemPrefersDark = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia("(prefers-color-scheme: dark)").matches;
+
 export const useAppSettingsStore = create<AppSettingsState>()(
   persist(
     (set) => ({
-      darkMode: false,
+      darkMode: systemPrefersDark(),
+      themeExplicit: false,
       paletteMode: "pastel",
       toggleDarkMode: () =>
-        set((state) => ({ darkMode: !state.darkMode })),
+        set((state) => ({ darkMode: !state.darkMode, themeExplicit: true })),
       setPaletteMode: (mode) => set({ paletteMode: mode }),
     }),
     {
       name: "schedule-maker-settings",
+      onRehydrateStorage: () => (state) => {
+        // No explicit choice saved → follow the current system preference,
+        // not whatever was persisted alongside other settings.
+        if (state && !state.themeExplicit) {
+          state.darkMode = systemPrefersDark();
+        }
+      },
     }
   )
 );
+
+// Follow live system-preference changes until the user picks a theme.
+if (typeof window !== "undefined") {
+  window
+    .matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", (e) => {
+      const s = useAppSettingsStore.getState();
+      if (!s.themeExplicit) {
+        useAppSettingsStore.setState({ darkMode: e.matches });
+      }
+    });
+}

@@ -5,42 +5,49 @@ import {
   SignInButton,
   SignUpButton,
 } from "@clerk/clerk-react";
+import { LazyMotion, MotionConfig } from "motion/react";
 import { Calendar, ArrowRight, Moon, Sun, Sparkles, GripVertical, FileDown } from "lucide-react";
 import ScheduleBuilder from "./ScheduleBuilder";
 import { useAppSettingsStore } from "./store/scheduleStore";
 import SharedScheduleView from "./SharedScheduleView";
 import { useConvexSync } from "./hooks/useConvexSync";
-import FluidBackground from "./components/effects/FluidBackground";
 
 export default function App() {
   const darkMode = useAppSettingsStore((s) => s.darkMode);
   const [guestMode, setGuestMode] = useState(false);
 
-  // Apply dark mode class to <html>
+  // Apply theme class to <html>. The FOUC script in index.html added
+  // .light/.dark before first paint; keep exactly one of them in sync.
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", darkMode);
+    const root = document.documentElement;
+    root.classList.remove("light", "dark");
+    root.classList.add(darkMode ? "dark" : "light");
   }, [darkMode]);
 
   // Check for shared schedule in URL
   const shareId = new URL(window.location.href).searchParams.get("share");
-  if (shareId) {
-    return <SharedScheduleView shareId={shareId} />;
-  }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <FluidBackground />
-      <Authenticated>
-        <AuthenticatedApp />
-      </Authenticated>
-      <Unauthenticated>
-        {guestMode ? (
-          <ScheduleBuilder />
+    <LazyMotion features={() => import("./motionFeatures").then(m => m.default)} strict>
+      <MotionConfig reducedMotion="user">
+        {shareId ? (
+          <SharedScheduleView shareId={shareId} />
         ) : (
-          <LandingPage onGuestMode={() => setGuestMode(true)} />
+          <div className="min-h-screen bg-background text-foreground">
+            <Authenticated>
+              <AuthenticatedApp />
+            </Authenticated>
+            <Unauthenticated>
+              {guestMode ? (
+                <ScheduleBuilder />
+              ) : (
+                <LandingPage onGuestMode={() => setGuestMode(true)} />
+              )}
+            </Unauthenticated>
+          </div>
         )}
-      </Unauthenticated>
-    </div>
+      </MotionConfig>
+    </LazyMotion>
   );
 }
 

@@ -5,10 +5,30 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Build beautiful weekly schedules with drag-and-drop, export to PDF/PNG, and sync across devices." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F8F6F3" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0B0E1C" />
     <title>Schedule Maker</title>
+
+    <!-- Prevent FOUC: always resolve and apply a theme class before first
+         paint (saved choice from the settings store, else system preference).
+         The Heritage tokens rely on this — there are no
+         prefers-color-scheme CSS fallbacks. -->
+    <script>
+      (function () {
+        var dark = null;
+        try {
+          var raw = localStorage.getItem('schedule-maker-settings');
+          if (raw) {
+            var state = JSON.parse(raw).state;
+            if (state && state.themeExplicit === true) dark = !!state.darkMode;
+          }
+        } catch (e) {}
+        if (dark === null) {
+          dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        }
+        document.documentElement.classList.add(dark ? 'dark' : 'light');
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

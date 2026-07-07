@@ -1,59 +1,145 @@
+/* Self-hosted fonts (no Google Fonts CDN) */
+@import "@fontsource-variable/plus-jakarta-sans";
+@import "@fontsource-variable/fraunces";
+@import "@fontsource-variable/fraunces/wght-italic.css";
 @import "tailwindcss";
 
-/* ─── Gradify 2.0: Weightless Clarity (Light) / Aura Midnight (Dark) ─── */
-@theme {
-  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+/* Tell Tailwind v4 to use the .dark class for the dark: variant */
+@custom-variant dark (&:is(.dark *));
 
-  /* Light Mode Tokens — "Weightless Clarity" */
-  --color-background: #eff7ff;
-  --color-foreground: #003348;
+/* Hover-capable pointers only */
+@custom-variant can-hover (@media (hover: hover) and (pointer: fine));
 
-  --color-card: #ffffff;
-  --color-card-foreground: #003348;
+/* ───────────────────────────────────────────────────────────────
+   Smooth theme crossfade. Registering the palette vars as typed
+   <color> @property values makes them animatable, so toggling .dark
+   interpolates every color at once instead of snapping. The eased
+   curve (fast then settling) avoids any harsh flash. Reduced-motion
+   users get an instant swap via the global guard near the bottom.
+   ─────────────────────────────────────────────────────────────── */
+@property --heritage-bg { syntax: "<color>"; inherits: true; initial-value: #F8F6F3; }
+@property --heritage-fg { syntax: "<color>"; inherits: true; initial-value: #131C30; }
+@property --heritage-surface { syntax: "<color>"; inherits: true; initial-value: #FFFFFF; }
+@property --heritage-surface-2 { syntax: "<color>"; inherits: true; initial-value: #EFEAE3; }
+@property --heritage-surface-3 { syntax: "<color>"; inherits: true; initial-value: #E6DFD5; }
+@property --heritage-primary { syntax: "<color>"; inherits: true; initial-value: #252D6B; }
+@property --heritage-primary-solid { syntax: "<color>"; inherits: true; initial-value: #252D6B; }
+@property --heritage-accent { syntax: "<color>"; inherits: true; initial-value: #7D1F34; }
+@property --heritage-muted-fg { syntax: "<color>"; inherits: true; initial-value: #545C6E; }
+@property --heritage-border { syntax: "<color>"; inherits: true; initial-value: rgba(19, 28, 48, 0.14); }
+@property --heritage-ring { syntax: "<color>"; inherits: true; initial-value: #252D6B; }
 
-  --color-primary: #056380;
-  --color-primary-foreground: #ffffff;
+:root {
+  transition-property: --heritage-bg, --heritage-fg, --heritage-surface, --heritage-surface-2,
+    --heritage-surface-3, --heritage-primary, --heritage-primary-solid, --heritage-accent,
+    --heritage-muted-fg, --heritage-border, --heritage-ring;
+  transition-duration: 0.5s;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
 
-  --color-muted: #e3f3ff;
-  --color-muted-foreground: #356079;
+/* ───────────────────────────────────────────────────────────────
+   Design system: "Heritage" — deep navy + burgundy quiet luxury.
+   Shared across mo-alyousif.com, Gradify, Schedule Maker, Gamut.
+   Raw palette lives in :root with one .dark override; Tailwind
+   tokens map via @theme inline below. The FOUC script in index.html
+   always applies .light/.dark before first paint.
+   surface-3 is a tool-app extension (denser UI than the portfolio).
+   ─────────────────────────────────────────────────────────────── */
+:root {
+  color-scheme: light;
 
-  --color-accent: #d1ecff;
-  --color-accent-foreground: #003348;
+  --heritage-bg: #F8F6F3;            /* warm stone */
+  --heritage-fg: #131C30;
+  --heritage-surface: #FFFFFF;
+  --heritage-surface-2: #EFEAE3;
+  --heritage-surface-3: #E6DFD5;
+  --heritage-primary: #252D6B;       /* navy — 11.7:1 on bg */
+  --heritage-primary-solid: #252D6B; /* button fills / large shapes */
+  --heritage-accent: #7D1F34;        /* burgundy — 9:1 on bg */
+  --heritage-muted-fg: #545C6E;
+  --heritage-border: rgba(19, 28, 48, 0.14);
+  --heritage-ring: #252D6B;
 
-  --color-border: rgba(136, 179, 206, 0.12);
+  --heritage-shadow-card: 0 1px 2px rgba(19, 28, 48, 0.05), 0 8px 24px rgba(19, 28, 48, 0.06);
+  --heritage-shadow-card-lg: 0 2px 4px rgba(19, 28, 48, 0.05), 0 20px 48px rgba(19, 28, 48, 0.10);
+}
 
-  --color-destructive: #dc2626;
-  --color-destructive-foreground: #ffffff;
+.dark {
+  color-scheme: dark;
 
-  /* Gradify surface hierarchy */
-  --color-surface: #eff7ff;
-  --color-surface-container-lowest: #ffffff;
-  --color-surface-container-low: #e3f3ff;
-  --color-surface-container: #d1ecff;
-  --color-surface-container-high: #cceaff;
-  --color-surface-container-highest: #b8e3ff;
-  --color-surface-bright: #f5faff;
-  --color-surface-variant: #dde7f0;
-  --color-primary-container: #8fd5f7;
-  --color-primary-fixed-dim: #81c7e8;
-  --color-on-primary: #ffffff;
-  --color-on-surface: #003348;
-  --color-on-surface-variant: #356079;
-  --color-outline-variant: #88b3ce;
-  --color-secondary: #346268;
+  --heritage-bg: #0B0E1C;
+  --heritage-fg: #ECE9F0;
+  --heritage-surface: #141830;
+  --heritage-surface-2: #1B2040;
+  --heritage-surface-3: #232A52;
+  --heritage-primary: #8F97EC;       /* text / small UI — AA-safe */
+  --heritage-primary-solid: #5560C9; /* fills / large shapes only */
+  --heritage-accent: #D68A9C;        /* rose — 7.1:1 on bg */
+  --heritage-muted-fg: #A9A6BC;
+  --heritage-border: rgba(236, 233, 240, 0.14);
+  --heritage-ring: #8F97EC;
 
-  /* Radii — Gradify style */
-  --radius-sm: 0.5rem;
-  --radius-md: 1rem;
-  --radius-lg: 1.5rem;
-  --radius-xl: 2rem;
-  --radius-2xl: 3rem;
+  --heritage-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
+  --heritage-shadow-card-lg: 0 2px 4px rgba(0, 0, 0, 0.45), 0 20px 48px rgba(0, 0, 0, 0.5);
+}
 
-  /* Animations */
+@theme inline {
+  /* Typography */
+  --font-sans: "Plus Jakarta Sans Variable", system-ui, sans-serif;
+  --font-display: "Fraunces Variable", Georgia, serif;
+
+  /* Colors */
+  --color-background: var(--heritage-bg);
+  --color-foreground: var(--heritage-fg);
+  --color-surface: var(--heritage-surface);
+  --color-surface-2: var(--heritage-surface-2);
+  --color-surface-3: var(--heritage-surface-3);
+  --color-primary: var(--heritage-primary);
+  --color-primary-solid: var(--heritage-primary-solid);
+  --color-accent: var(--heritage-accent);
+  --color-muted-foreground: var(--heritage-muted-fg);
+  --color-border: var(--heritage-border);
+  --color-ring: var(--heritage-ring);
+
+  /* Destructive (kept from tool UI needs; harmonized with Heritage) */
+  --color-destructive: #B3372F;
+  --color-destructive-foreground: #FFFFFF;
+
+  /* ── Compat aliases (old Material-style names → Heritage values).
+        Remove once the component sweep lands. ── */
+  --color-card: var(--heritage-surface);
+  --color-card-foreground: var(--heritage-fg);
+  --color-muted: var(--heritage-surface-2);
+  --color-on-surface: var(--heritage-fg);
+  --color-on-surface-variant: var(--heritage-muted-fg);
+  --color-on-primary: #FFFFFF;
+  --color-surface-container-lowest: var(--heritage-surface);
+  --color-surface-container-low: var(--heritage-bg);
+  --color-surface-container: var(--heritage-surface-2);
+  --color-surface-container-high: var(--heritage-surface-3);
+  --color-surface-container-highest: var(--heritage-surface-3);
+  --color-surface-bright: var(--heritage-surface-2);
+  --color-surface-variant: var(--heritage-surface-3);
+  --color-primary-container: var(--heritage-primary-solid);
+  --color-primary-fixed-dim: var(--heritage-primary-solid);
+  --color-outline-variant: var(--heritage-muted-fg);
+  --color-secondary: var(--heritage-accent);
+  --color-accent-foreground: var(--heritage-fg);
+
+  /* Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1.25rem;
+
+  /* Shadows */
+  --shadow-card: var(--heritage-shadow-card);
+  --shadow-card-lg: var(--heritage-shadow-card-lg);
+
+  /* Animations — Heritage ease */
   --animate-fade-in: fade-in 0.2s ease-out;
-  --animate-slide-up: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  --animate-scale-in: scale-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  --animate-slide-right: slide-right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-slide-up: slide-up 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-scale-in: scale-in 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-slide-right: slide-right 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 
   @keyframes fade-in {
     from { opacity: 0; }
@@ -73,121 +159,116 @@
   }
 }
 
-/* ─── Dark Mode: "Aura Midnight Editorial" ─── */
-.dark {
-  --color-background: #0a0f15;
-  --color-foreground: #e1e5ee;
-
-  --color-card: #141a21;
-  --color-card-foreground: #e1e5ee;
-
-  --color-primary: #81aeff;
-  --color-primary-foreground: #003066;
-
-  --color-muted: #0e141a;
-  --color-muted-foreground: #a7abb4;
-
-  --color-accent: #1a2028;
-  --color-accent-foreground: #e1e5ee;
-
-  --color-border: rgba(67, 72, 79, 0.12);
-
-  --color-destructive: #ff716c;
-  --color-destructive-foreground: #ffffff;
-
-  --color-surface: #0a0f15;
-  --color-surface-container-lowest: #000000;
-  --color-surface-container-low: #0e141a;
-  --color-surface-container: #141a21;
-  --color-surface-container-high: #1a2028;
-  --color-surface-container-highest: #1f262f;
-  --color-surface-bright: #252d36;
-  --color-surface-variant: #2a323c;
-  --color-primary-container: #68a0ff;
-  --color-primary-fixed-dim: #5a94f0;
-  --color-on-primary: #003066;
-  --color-on-surface: #e1e5ee;
-  --color-on-surface-variant: #a7abb4;
-  --color-outline-variant: #43484f;
-  --color-secondary: #8fd5f7;
-}
-
-/* ─── Base Styles ─── */
+/* Base styles */
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  @apply bg-background text-foreground font-sans antialiased;
 }
 
-/* ─── Glass Card (Glassmorphism) ─── */
+/* Custom scrollbar — subtle */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary/25 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary/40;
+}
+
+/* Selection */
+::selection {
+  @apply bg-primary/20 text-foreground;
+}
+
+/* Focus ring */
+:focus-visible {
+  @apply outline-none ring-2 ring-ring/70 ring-offset-2 ring-offset-background;
+}
+
+/* Glass utility — Heritage tint, single .dark override */
+@utility glass {
+  background: rgba(248, 246, 243, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--heritage-border);
+}
+
+.dark .glass {
+  background: rgba(11, 14, 28, 0.65);
+}
+
+/* Glass card — floating panels (compat: was .glass-card) */
 .glass-card {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1.5px solid rgba(136, 179, 206, 0.15);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--heritage-border);
 }
 .dark .glass-card {
-  background: rgba(42, 50, 60, 0.6);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1.5px solid rgba(67, 72, 79, 0.15);
+  background: rgba(20, 24, 48, 0.65);
 }
 
-/* ─── Gradient Primary ─── */
+/* Primary fill (compat: was a teal gradient; Heritage keeps fills solid) */
 .gradient-primary {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-container));
+  background: var(--heritage-primary-solid);
 }
 
-/* ─── Ambient Shadows ─── */
+/* Card hover lift */
+@utility hover-lift {
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hover-lift:hover {
+    transform: translateY(-4px);
+  }
+}
+
+/* Shadows (compat classes → Heritage card shadows) */
 .shadow-soft {
-  box-shadow: 0 4px 16px rgba(0, 51, 72, 0.04);
-}
-.dark .shadow-soft {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-}
-.shadow-card {
-  box-shadow: 0 8px 24px rgba(0, 51, 72, 0.06);
-}
-.dark .shadow-card {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--heritage-shadow-card);
 }
 .shadow-ambient {
-  box-shadow: 0 20px 40px rgba(0, 51, 72, 0.06);
-}
-.dark .shadow-ambient {
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--heritage-shadow-card-lg);
 }
 
-/* ─── Smooth Scrollbars ─── */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(136, 179, 206, 0.3);
-  border-radius: 3px;
-}
-.dark ::-webkit-scrollbar-thumb {
-  background: rgba(67, 72, 79, 0.4);
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(136, 179, 206, 0.5);
-}
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: rgba(67, 72, 79, 0.6);
-}
-
-/* ─── Scrollbar Utilities ─── */
+/* Scrollbar utilities */
 .scrollbar-none {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 .scrollbar-none::-webkit-scrollbar {
   display: none;
+}
+
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--heritage-border) transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  height: 6px;
+}
+
+/* Global reduced-motion guard: flattens remaining CSS
+   animations/transitions (hover transforms, crossfade). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
