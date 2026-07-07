@@ -138,7 +138,7 @@ export default function WeeklyGrid({
     >
       <div
         ref={gridRef}
-        className="overflow-auto bg-card rounded-3xl shadow-soft relative flex-1 min-h-0"
+        className="overflow-auto bg-surface rounded-lg border border-border shadow-card relative flex-1 min-h-0"
       >
         {/* Empty state */}
         {tasks.length === 0 && !readOnly && (
@@ -146,25 +146,25 @@ export default function WeeklyGrid({
             <div className="text-center opacity-60">
               <div className="text-4xl mb-3">📅</div>
               <p className="text-sm font-medium text-muted-foreground">No tasks yet</p>
-              <p className="text-xs text-muted-foreground mt-1">Click a cell or press <kbd className="px-1.5 py-0.5 bg-[var(--color-surface-container-high)] rounded-full font-mono text-[10px]">N</kbd> to add one</p>
+              <p className="text-xs text-muted-foreground mt-1">Click a cell or press <kbd className="px-1.5 py-0.5 bg-surface-2 border border-border rounded-sm font-mono text-[10px]">N</kbd> to add one</p>
             </div>
           </div>
         )}
         <div className="min-w-[600px]">
           {/* ── Day Headers ── */}
           <div
-            className="grid sticky top-0 z-20 bg-card"
+            className="grid sticky top-0 z-20 bg-surface border-b border-border"
             style={{
               gridTemplateColumns: `80px repeat(${visibleDays.length}, 1fr)`,
             }}
           >
             {/* Empty top-left corner */}
-            <div className="p-3 text-xs font-medium text-muted-foreground border-r border-[var(--color-outline-variant)]/8" />
+            <div className="p-3 text-xs font-medium text-muted-foreground border-r border-border" />
 
             {visibleDays.map((day) => (
               <div
                 key={day}
-                className="p-3 text-center uppercase text-[10px] tracking-[0.1em] font-semibold text-[var(--color-on-surface-variant)] border-r border-[var(--color-outline-variant)]/8 last:border-r-0"
+                className="p-3 text-center uppercase text-[10px] tracking-[0.1em] font-semibold text-muted-foreground border-r border-border last:border-r-0"
               >
                 {DAY_SHORT_LABELS[day]}
               </div>
@@ -179,7 +179,7 @@ export default function WeeklyGrid({
             }}
           >
             {/* Time labels column */}
-            <div className="border-r border-[var(--color-outline-variant)]/8" style={{ height: totalHeight }}>
+            <div className="border-r border-border" style={{ height: totalHeight }}>
               {timeSlots.map((time) => (
                 <div
                   key={time}
@@ -217,7 +217,7 @@ export default function WeeklyGrid({
       <DragOverlay>
         {activeTask && (
           <div
-            className="rounded-2xl shadow-ambient opacity-90 px-3 py-1.5 text-xs font-medium"
+            className="rounded-md shadow-card-lg opacity-90 px-3 py-1.5 text-xs font-medium scale-105"
             style={{
               backgroundColor: getTaskColors(activeTask.color, paletteMode, isDarkMode).bg,
               color: getTaskColors(activeTask.color, paletteMode, isDarkMode).text,
@@ -276,7 +276,7 @@ function DayColumn({
 
   return (
     <div
-      className="relative border-r border-[var(--color-outline-variant)]/8 last:border-r-0"
+      className="relative border-r border-border last:border-r-0"
       style={{ height: totalHeight }}
     >
       {/* Grid lines (time slot cells) */}
@@ -331,9 +331,9 @@ function DroppableCell({ id, height, onClick, readOnly }: DroppableCellProps) {
   return (
     <div
       ref={setNodeRef}
-      className={`border-b border-[var(--color-outline-variant)]/6
-        ${!readOnly ? "cursor-pointer" : ""}
-        ${isOver ? "bg-primary/5" : ""}`}
+      className={`border-b border-border/60 transition-colors duration-200
+        ${!readOnly ? "cursor-pointer hover:bg-primary/5" : ""}
+        ${isOver ? "bg-primary/10" : ""}`}
       style={{ height }}
       onClick={() => {
         if (!readOnly) onClick();

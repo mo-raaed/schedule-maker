@@ -46,10 +46,10 @@ export default function TaskBlock({
         e.stopPropagation();
         onClick();
       }}
-      className={`absolute left-1 right-1 rounded-2xl overflow-hidden cursor-pointer
+      className={`absolute left-1 right-1 rounded-md overflow-hidden cursor-pointer
         select-none transition-shadow duration-200
-        ${isDragging ? "opacity-40" : "shadow-soft hover:shadow-card"}
-        ${isOverlapping ? "ring-2 ring-red-400/60" : ""}`}
+        ${isDragging ? "opacity-40" : "shadow-soft hover:shadow-card-lg"}
+        ${isOverlapping ? "ring-2 ring-destructive/60" : ""}`}
       style={{
         top: topPx,
         height: heightPx,
@@ -83,7 +83,7 @@ export default function TaskBlock({
       {/* Overlap warning icon */}
       {isOverlapping && (
         <div className="absolute top-0.5 right-0.5">
-          <AlertTriangle className="h-3 w-3 text-red-500" />
+          <AlertTriangle className="h-3 w-3 text-destructive" />
         </div>
       )}
     </div>
