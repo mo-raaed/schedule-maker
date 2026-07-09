@@ -134,8 +134,8 @@ function LandingPage({ onGuestMode }: { onGuestMode: () => void }) {
               },
               {
                 icon: <FileDown className="h-6 w-6" />,
-                title: "Flawless Export",
-                desc: "Download your schedule as a high-resolution PDF or PNG",
+                title: "Export",
+                desc: "Download your schedule as a 2x-resolution PDF or PNG",
               },
             ].map((f, i) => (
               <m.div
