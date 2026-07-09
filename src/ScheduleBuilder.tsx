@@ -1,8 +1,9 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import {
   Calendar,
   Moon,
   Sun,
+  Loader2,
 } from "lucide-react";
 import { Authenticated, Unauthenticated } from "convex/react";
 import { SignInButton, UserButton } from "@clerk/clerk-react";
@@ -24,7 +25,12 @@ import type { Day, Task } from "./lib/types";
 
 // ─── Main Builder View ──────────────────────────────────────────────
 
-export default function ScheduleBuilder() {
+interface ScheduleBuilderProps {
+  /** False while an authenticated user's remote schedules are still loading. */
+  ready?: boolean;
+}
+
+export default function ScheduleBuilder({ ready = true }: ScheduleBuilderProps) {
   const schedules = useScheduleStore((s) => s.schedules);
   const createSchedule = useScheduleStore((s) => s.createSchedule);
   const darkMode = useAppSettingsStore((s) => s.darkMode);
@@ -42,10 +48,17 @@ export default function ScheduleBuilder() {
 
   const gridRef = useRef<HTMLDivElement>(null);
 
-  // Auto-create first schedule if none exist
-  if (schedules.length === 0) {
-    createSchedule("My Schedule");
-  }
+  // Auto-create the first schedule, but only once we know there are none.
+  //
+  // This used to run during render. For a signed-in user on a fresh browser
+  // it fired before Convex delivered their schedules, and the new schedule
+  // had no convexId -- so useConvexSync treated it as a guest schedule and
+  // pushed it. Every new device added an empty "My Schedule" to the account.
+  useEffect(() => {
+    if (ready && schedules.length === 0) {
+      createSchedule("My Schedule");
+    }
+  }, [ready, schedules.length, createSchedule]);
 
   // ── Keyboard shortcuts ──
   useKeyboardShortcuts({
@@ -81,6 +94,20 @@ export default function ScheduleBuilder() {
     setTaskModalOpen(true);
   }, []);
 
+  // Hold the grid back until remote schedules land, rather than flashing an
+  // empty "My Schedule" the user never made.
+  if (!ready) {
+    return (
+      <div
+        role="status"
+        aria-label="Loading your schedules"
+        className="h-screen flex items-center justify-center bg-background"
+      >
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-background">
       {/* ── Header ── */}
@@ -102,6 +129,7 @@ export default function ScheduleBuilder() {
             variant="ghost"
             size="icon"
             onClick={toggleDarkMode}
+            aria-label={darkMode ? "Switch to light theme" : "Switch to dark theme"}
             title="Toggle Dark Mode"
           >
             {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
@@ -125,7 +153,9 @@ export default function ScheduleBuilder() {
       {/* ── Body: Grid + Right Toolbar ── */}
       <div className="flex flex-1 min-h-0">
         {/* Grid Area */}
-        <main className="flex-1 min-h-0 min-w-0 px-[3vw] sm:px-[4vw] md:px-[5vw] pt-4 sm:pt-5 pb-3 sm:pb-4 flex flex-col">
+        {/* pb-[4.5rem] on mobile clears the fixed 3.5rem bottom bar, which is
+            out of flow and was covering the last rows of the grid. */}
+        <main className="flex-1 min-h-0 min-w-0 px-[3vw] sm:px-[4vw] md:px-[5vw] pt-4 sm:pt-5 pb-[4.5rem] md:pb-4 flex flex-col">
           <div className="max-w-6xl mx-auto w-full flex-1 min-h-0 flex flex-col">
             <WeeklyGrid
               gridRef={gridRef}

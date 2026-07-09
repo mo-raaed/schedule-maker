@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { useAuth } from "@clerk/clerk-react";
 import { api } from "../../convex/_generated/api";
@@ -20,6 +20,9 @@ export function useConvexSync(userReady: boolean) {
   const hasSynced = useRef(false);
   const isSyncing = useRef(false);
   const prevRemoteKey = useRef<string | null>(null);
+  /** Mirrors hasSynced as state, so callers can hold off rendering until the
+   *  remote schedules have landed. A ref alone would not re-render them. */
+  const [synced, setSynced] = useState(false);
 
   const syncFromConvex = useScheduleStore((s) => s.syncFromConvex);
   const setActiveSchedule = useScheduleStore((s) => s.setActiveSchedule);
@@ -121,6 +124,7 @@ export function useConvexSync(userReady: boolean) {
       }
 
       prevRemoteKey.current = remoteKey;
+      setSynced(true);
     } else if (remoteKey !== prevRemoteKey.current) {
       // ── Subsequent reactive update from Convex ──
       prevRemoteKey.current = remoteKey;
@@ -229,4 +233,6 @@ export function useConvexSync(userReady: boolean) {
     setLastActiveMutation,
     pushGuestSchedule,
   ]);
+
+  return { synced };
 }

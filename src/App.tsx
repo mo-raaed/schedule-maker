@@ -62,9 +62,9 @@ function AuthenticatedApp() {
     void upsertUser().then(() => setUserReady(true));
   }, [upsertUser]);
 
-  useConvexSync(userReady);
+  const { synced } = useConvexSync(userReady);
 
-  return <ScheduleBuilder />;
+  return <ScheduleBuilder ready={userReady && synced} />;
 }
 
 const heroEase = [0.22, 1, 0.36, 1] as const;
@@ -79,6 +79,7 @@ function LandingPage({ onGuestMode }: { onGuestMode: () => void }) {
       <div className="flex items-center justify-end px-6 pt-5">
         <button
           onClick={toggleDarkMode}
+          aria-label={darkMode ? "Switch to light theme" : "Switch to dark theme"}
           className="p-2.5 rounded-full hover:bg-surface-2 transition-all duration-200 text-muted-foreground hover:text-foreground cursor-pointer active:scale-[0.98]"
           title="Toggle Dark Mode"
         >
