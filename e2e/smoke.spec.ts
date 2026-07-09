@@ -113,7 +113,50 @@ test.describe("keyboard path through the grid", () => {
   });
 });
 
+test.describe("validation", () => {
+  test("rejects a task that ends before it starts", async ({ page }) => {
+    await enterBuilder(page);
+    await page.getByRole("button", { name: "Add Task", exact: true }).click();
+
+    await page.getByPlaceholder("e.g., Math Lecture, Gym, Meeting").fill("Backwards");
+    await page.getByRole("button", { name: "Mon", exact: true }).click();
+
+    // Default is 09:00 -> 10:00. Push the end back before the start.
+    await page.getByLabel("End Time").fill("08:00");
+
+    await expect(page.getByRole("alert")).toContainText("End time must be after start time");
+    await expect(page.getByRole("dialog").getByRole("button", { name: "Add Task", exact: true })).toBeDisabled();
+  });
+});
+
 test.describe("destructive actions", () => {
+  test("deleting a task asks first", async ({ page }) => {
+    await enterBuilder(page);
+
+    await page.getByRole("button", { name: "Add Task", exact: true }).click();
+    await page.getByPlaceholder("e.g., Math Lecture, Gym, Meeting").fill("Standup");
+    await page.getByRole("button", { name: "Mon", exact: true }).click();
+    await page.getByRole("dialog").getByRole("button", { name: "Add Task", exact: true }).click();
+
+    const block = page.getByRole("button", { name: /^Standup,/ });
+    await expect(block).toBeVisible();
+    await block.click();
+
+    await page.getByRole("button", { name: "Delete" }).click();
+    await expect(page.getByText("Delete task?")).toBeVisible();
+
+    // Backing out keeps the task.
+    await page.getByRole("button", { name: "Keep" }).click();
+    await page.keyboard.press("Escape");
+    await expect(block).toBeVisible();
+
+    // Confirming removes it.
+    await block.click();
+    await page.getByRole("button", { name: "Delete" }).click();
+    await page.getByRole("button", { name: "Yes, delete" }).click();
+    await expect(block).toHaveCount(0);
+  });
+
   test("deleting a schedule asks first, and Cancel keeps it", async ({ page }) => {
     await enterBuilder(page);
     await page.getByRole("button", { name: "New Schedule" }).click();
