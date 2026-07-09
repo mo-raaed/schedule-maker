@@ -5,6 +5,7 @@ import { api } from "../../convex/_generated/api";
 import { useScheduleStore } from "../store/scheduleStore";
 import type { Schedule, Task, ScheduleSettings } from "../lib/types";
 import { DEFAULT_SETTINGS } from "../lib/types";
+import { diffSchedule, isEmptyDiff } from "../lib/syncDiff";
 
 /**
  * Reactive Convex-first sync hook.
@@ -38,6 +39,9 @@ export function useConvexSync(userReady: boolean) {
   const createMutation = useMutation(api.schedules.createSchedule);
   const updateMutation = useMutation(api.schedules.updateSchedule);
   const deleteMutation = useMutation(api.schedules.deleteSchedule);
+  const addTaskMutation = useMutation(api.schedules.addTask);
+  const updateTaskMutation = useMutation(api.schedules.updateTask);
+  const removeTaskMutation = useMutation(api.schedules.removeTask);
   const setLastActiveMutation = useMutation(api.users.setLastActiveSchedule);
 
   // Convert remote schedules to local format
@@ -165,21 +169,41 @@ export function useConvexSync(userReady: boolean) {
         }
       }
 
-      // Modified schedules (updatedAt changed)
+      // Modified schedules (updatedAt changed).
+      //
+      // Push per-task operations rather than the whole array. Each granular
+      // mutation re-reads the server's tasks inside its transaction, so a
+      // task added in another tab survives a write from this one. Sending
+      // the full array made every write last-writer-wins.
       for (const curr of state.schedules) {
-        if (curr.convexId) {
-          const prev = prevMap.get(curr.id);
-          if (prev && curr.updatedAt !== prev.updatedAt) {
-            void updateMutation({
-              scheduleId: curr.convexId as any,
-              name: curr.name,
-              tasks: curr.tasks,
-              settings: curr.settings,
-              order: curr.order,
-            }).catch((err) =>
-              console.error("Convex update failed:", err)
-            );
-          }
+        if (!curr.convexId) continue;
+        const prev = prevMap.get(curr.id);
+        if (!prev || curr.updatedAt === prev.updatedAt) continue;
+
+        const scheduleId = curr.convexId as any;
+        const diff = diffSchedule(prev, curr);
+        if (isEmptyDiff(diff)) continue;
+
+        const fail = (op: string) => (err: unknown) =>
+          console.error(`Convex ${op} failed:`, err);
+
+        for (const task of diff.added) {
+          void addTaskMutation({ scheduleId, task }).catch(fail("addTask"));
+        }
+        for (const task of diff.updated) {
+          void updateTaskMutation({ scheduleId, task }).catch(fail("updateTask"));
+        }
+        for (const taskId of diff.removedIds) {
+          void removeTaskMutation({ scheduleId, taskId }).catch(fail("removeTask"));
+        }
+        if (diff.metadataChanged) {
+          // Deliberately omits `tasks` — metadata only.
+          void updateMutation({
+            scheduleId,
+            name: curr.name,
+            settings: curr.settings,
+            order: curr.order,
+          }).catch(fail("update"));
         }
       }
 
@@ -195,5 +219,14 @@ export function useConvexSync(userReady: boolean) {
     });
 
     return unsub;
-  }, [isSignedIn, updateMutation, deleteMutation, setLastActiveMutation, pushGuestSchedule]);
+  }, [
+    isSignedIn,
+    updateMutation,
+    deleteMutation,
+    addTaskMutation,
+    updateTaskMutation,
+    removeTaskMutation,
+    setLastActiveMutation,
+    pushGuestSchedule,
+  ]);
 }
