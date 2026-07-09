@@ -7,7 +7,7 @@ import type { Day, Task } from "../../lib/types";
 import { DAY_SHORT_LABELS, ALL_DAYS } from "../../lib/types";
 import { DEFAULT_TASK_COLOR } from "../../lib/colors";
 import { useScheduleStore, useAppSettingsStore } from "../../store/scheduleStore";
-import { getWeekOrder } from "../../lib/time";
+import { getWeekOrder, timeToMinutes } from "../../lib/time";
 import { Trash2 } from "lucide-react";
 
 interface AddTaskModalProps {
@@ -43,10 +43,12 @@ export default function AddTaskModal({
   const [selectedDays, setSelectedDays] = useState<Day[]>([]);
   const [startTime, setStartTime] = useState("09:00");
   const [endTime, setEndTime] = useState("10:00");
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   // Reset form when modal opens/changes
   useEffect(() => {
     if (open) {
+      setConfirmingDelete(false);
       if (editTask) {
         setName(editTask.name);
         setDescription(editTask.description ?? "");
@@ -107,7 +109,12 @@ export default function AddTaskModal({
   };
 
   const visibleDays = settings ? getWeekOrder(settings.startOfWeek) : ALL_DAYS;
-  const isValid = name.trim().length > 0 && selectedDays.length > 0;
+
+  // A task ending at or before it starts renders as a 16px sliver, because
+  // the grid clamps its height. Reject it instead.
+  const endsAfterStart = timeToMinutes(endTime) > timeToMinutes(startTime);
+  const isValid =
+    name.trim().length > 0 && selectedDays.length > 0 && endsAfterStart;
 
   return (
     <Modal
@@ -202,24 +209,52 @@ export default function AddTaskModal({
           />
         </div>
 
+        {/* Validation */}
+        {!endsAfterStart && (
+          <p role="alert" className="text-sm text-destructive">
+            End time must be after start time.
+          </p>
+        )}
+
         {/* Actions */}
-        <div className="flex items-center justify-between pt-2">
-          <div>
-            {editTask && (
-              <Button variant="destructive" size="sm" onClick={handleDelete}>
+        <div className="flex items-center justify-between gap-3 pt-2">
+          <div className="min-w-0">
+            {editTask && !confirmingDelete && (
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => setConfirmingDelete(true)}
+              >
                 <Trash2 className="h-4 w-4 mr-1.5" />
                 Delete
               </Button>
             )}
+            {editTask && confirmingDelete && (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">Delete task?</span>
+                <Button variant="destructive" size="sm" onClick={handleDelete}>
+                  Yes, delete
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setConfirmingDelete(false)}
+                >
+                  Keep
+                </Button>
+              </div>
+            )}
           </div>
-          <div className="flex gap-2">
-            <Button variant="ghost" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button onClick={handleSave} disabled={!isValid}>
-              {editTask ? "Save Changes" : "Add Task"}
-            </Button>
-          </div>
+          {!confirmingDelete && (
+            <div className="flex gap-2 shrink-0">
+              <Button variant="ghost" onClick={onClose}>
+                Cancel
+              </Button>
+              <Button onClick={handleSave} disabled={!isValid}>
+                {editTask ? "Save Changes" : "Add Task"}
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </Modal>

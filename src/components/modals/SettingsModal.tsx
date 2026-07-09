@@ -73,9 +73,16 @@ export default function SettingsModal({ open, onClose }: SettingsModalProps) {
           <Select
             label="Day Starts At"
             value={String(settings.startHour)}
-            onChange={(e) =>
-              updateSettings({ startHour: parseInt(e.target.value) })
-            }
+            onChange={(e) => {
+              const startHour = parseInt(e.target.value);
+              // The grid derives its height from (endHour - startHour). Let
+              // start pass end and that height goes negative.
+              updateSettings(
+                settings.endHour <= startHour
+                  ? { startHour, endHour: Math.min(startHour + 1, 24) }
+                  : { startHour }
+              );
+            }}
             options={Array.from({ length: 24 }, (_, i) => ({
               value: String(i),
               label: formatHourDisplay(i, clockFormat),

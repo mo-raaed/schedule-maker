@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo, useId } from "react";
 import { Clock } from "lucide-react";
 import { formatTimeDisplay, isValidTime, generateTimeSuggestions } from "../../lib/time";
 import type { ClockFormat } from "../../lib/types";
@@ -25,6 +25,7 @@ export default function TimePicker({
   const [inputValue, setInputValue] = useState(value);
   const [showDropdown, setShowDropdown] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const inputId = useId();
 
   const suggestions = useMemo(
     () => generateTimeSuggestions(increment, startHour, endHour),
@@ -105,11 +106,14 @@ export default function TimePicker({
   return (
     <div className="space-y-1.5" ref={containerRef}>
       {label && (
-        <label className="block text-sm font-medium text-foreground">{label}</label>
+        <label htmlFor={inputId} className="block text-sm font-medium text-foreground">
+          {label}
+        </label>
       )}
       <div className="relative">
         <Clock className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <input
+          id={inputId}
           type="text"
           inputMode="numeric"
           value={inputValue}
