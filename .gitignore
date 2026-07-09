@@ -25,3 +25,7 @@ dist-ssr
 
 # graphify knowledge-graph output (regenerable)
 graphify-out/
+
+# Playwright
+test-results/
+playwright-report/
