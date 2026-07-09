@@ -40,7 +40,7 @@ function Root() {
           dividerText: "text-muted-foreground font-sans",
           identityPreviewText: "text-foreground font-sans",
           identityPreviewEditButtonIcon: "text-primary",
-          formFieldSuccessText: "text-green-500 font-sans",
+          formFieldSuccessText: "text-primary font-sans",
           formFieldErrorText: "text-destructive font-sans",
           socialButtonsBlockButton: "bg-surface-2 hover:bg-surface-3 border border-border text-foreground font-medium font-sans active:scale-[0.98] transition-all duration-200",
         }
