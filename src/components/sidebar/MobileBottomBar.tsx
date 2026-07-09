@@ -41,7 +41,7 @@ export default function MobileBottomBar({
                 hover:bg-surface-2 transition-all duration-200 cursor-pointer"
             >
               <FileJson className="h-4 w-4 text-muted-foreground" />
-              Data
+              Import & Export
             </button>
             <button
               onClick={() => { onShortcuts(); setMoreOpen(false); }}

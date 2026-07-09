@@ -77,7 +77,7 @@ export default function DataModal({ open, onClose }: DataModalProps) {
   };
 
   return (
-    <Modal open={open} onClose={onClose} title="Data" maxWidth="max-w-sm">
+    <Modal open={open} onClose={onClose} title="Import & Export" maxWidth="max-w-sm">
       <div className="space-y-4">
         {/* Export JSON */}
         <button

@@ -46,7 +46,7 @@ export default function RightToolbar({
       />
       <ToolbarButton
         icon={<FileJson className="h-4 w-4" />}
-        label="Data"
+        label="Import & Export"
         onClick={onData}
       />
 
