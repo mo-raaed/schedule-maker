@@ -21,7 +21,25 @@ export default function Modal({
   maxWidth = "max-w-md",
 }: ModalProps) {
   const panelRef = useRef<HTMLDivElement>(null);
+  const restoreRef = useRef<HTMLElement | null>(null);
   const titleId = useId();
+
+  // Remember the focused element while we are closed. Capturing it once the
+  // panel is open is too late: a child's autoFocus lands during commit, before
+  // effects run, so activeElement is already inside the dialog by then.
+  useEffect(() => {
+    if (open) return;
+    const track = (e: FocusEvent) => {
+      const target = e.target as HTMLElement | null;
+      // A child's autoFocus fires focusin synchronously during commit, before
+      // this listener is torn down. Recording it would make us "restore" focus
+      // to a node that is about to unmount, dropping focus to <body>.
+      if (!target || target.closest('[role="dialog"]')) return;
+      restoreRef.current = target;
+    };
+    document.addEventListener("focusin", track);
+    return () => document.removeEventListener("focusin", track);
+  }, [open]);
 
   // Close on Escape, and keep Tab inside the panel while it is open.
   useEffect(() => {
@@ -52,14 +70,15 @@ export default function Modal({
     return () => document.removeEventListener("keydown", handler);
   }, [open, onClose]);
 
-  // Prevent body scroll, and restore focus to the trigger on close.
+  // Prevent body scroll, and hand focus back to the trigger on close.
   useEffect(() => {
     if (!open) return;
-    const previouslyFocused = document.activeElement as HTMLElement | null;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "";
-      previouslyFocused?.focus?.();
+      const target = restoreRef.current;
+      // The trigger may have unmounted with its menu; skip a detached node.
+      if (target?.isConnected) target.focus();
     };
   }, [open]);
 
