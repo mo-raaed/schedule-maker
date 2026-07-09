@@ -1,6 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { useScheduleStore } from "../../store/scheduleStore";
-import { Plus, Pencil, Copy, Trash2 } from "lucide-react";
+import { Plus, Pencil, Copy, Trash2, MoreVertical } from "lucide-react";
+import Modal from "../ui/Modal";
+import Button from "../ui/Button";
+import type { Schedule } from "../../lib/types";
 
 import {
   DndContext,
@@ -19,6 +22,19 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
+interface SortableTabProps {
+  schedule: Schedule;
+  isActive: boolean;
+  renamingId: string | null;
+  renameValue: string;
+  renameInputRef: React.RefObject<HTMLInputElement | null>;
+  setRenameValue: (v: string) => void;
+  handleRename: (id: string) => void;
+  setRenamingId: (id: string | null) => void;
+  setActiveSchedule: (id: string) => void;
+  openMenu: (id: string, x: number, y: number) => void;
+}
+
 function SortableTab({
   schedule,
   isActive,
@@ -29,8 +45,8 @@ function SortableTab({
   handleRename,
   setRenamingId,
   setActiveSchedule,
-  handleContextMenu,
-}: any) {
+  openMenu,
+}: SortableTabProps) {
   const {
     attributes,
     listeners,
@@ -52,6 +68,7 @@ function SortableTab({
         <input
           ref={renameInputRef}
           value={renameValue}
+          aria-label={`Rename ${schedule.name}`}
           onChange={(e) => setRenameValue(e.target.value)}
           onBlur={() => handleRename(schedule.id)}
           onKeyDown={(e) => {
@@ -65,33 +82,57 @@ function SortableTab({
     );
   }
 
+  /** Anchor the menu under the kebab so touch users get the same actions. */
+  const openMenuFromKebab = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    const r = e.currentTarget.getBoundingClientRect();
+    openMenu(schedule.id, r.left, r.bottom + 4);
+  };
+
   return (
-    <button
+    <div
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      {...listeners}
-      onClick={() => setActiveSchedule(schedule.id)}
-      onDoubleClick={() => {
-        setRenamingId(schedule.id);
-        setRenameValue(schedule.name);
+      onContextMenu={(e) => {
+        e.preventDefault();
+        openMenu(schedule.id, e.clientX, e.clientY);
       }}
-      onContextMenu={(e) => handleContextMenu(e, schedule.id)}
-      className={`relative shrink-0 flex items-center gap-1.5 h-8 px-4 rounded-full text-sm font-medium
-        transition-colors duration-200 cursor-grab active:cursor-grabbing select-none max-w-[180px] active:scale-[0.98]
+      className={`group relative shrink-0 flex items-center gap-0.5 h-8 pl-4 pr-1 rounded-full text-sm font-medium
+        transition-colors duration-200 select-none max-w-[200px]
         ${isActive
           ? "bg-primary-solid text-white shadow-soft"
           : "bg-surface-2 text-muted-foreground hover:bg-surface-3 hover:text-foreground"
         }`}
-      title={`${schedule.name} — double-click to rename`}
     >
-      <span className="truncate">{schedule.name}</span>
-      {schedule.tasks.length > 0 && (
-        <span className={`text-[10px] font-normal shrink-0 ${isActive ? "opacity-70" : "opacity-50"}`}>
-          {schedule.tasks.length}
-        </span>
-      )}
-    </button>
+      <button
+        {...attributes}
+        {...listeners}
+        onClick={() => setActiveSchedule(schedule.id)}
+        onDoubleClick={() => {
+          setRenamingId(schedule.id);
+          setRenameValue(schedule.name);
+        }}
+        className="flex items-center gap-1.5 min-w-0 cursor-pointer active:cursor-grabbing active:scale-[0.98]"
+        title={`${schedule.name} — double-click to rename`}
+      >
+        <span className="truncate">{schedule.name}</span>
+        {schedule.tasks.length > 0 && (
+          <span className={`text-[10px] font-normal shrink-0 ${isActive ? "opacity-70" : "opacity-50"}`}>
+            {schedule.tasks.length}
+          </span>
+        )}
+      </button>
+
+      <button
+        onClick={openMenuFromKebab}
+        aria-label={`Actions for ${schedule.name}`}
+        className={`shrink-0 h-6 w-6 rounded-full flex items-center justify-center cursor-pointer
+          transition-colors duration-200
+          ${isActive ? "hover:bg-white/20" : "hover:bg-background/60"}`}
+      >
+        <MoreVertical className="h-3.5 w-3.5" />
+      </button>
+    </div>
   );
 }
 
@@ -106,6 +147,7 @@ export default function ScheduleTabs() {
   const reorderSchedules = useScheduleStore((s) => s.reorderSchedules);
 
   const [contextMenu, setContextMenu] = useState<{ id: string; x: number; y: number } | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<Schedule | null>(null);
   const [renamingId, setRenamingId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState("");
   const menuRef = useRef<HTMLDivElement>(null);
@@ -161,9 +203,16 @@ export default function ScheduleTabs() {
     setRenamingId(null);
   };
 
-  const handleContextMenu = (e: React.MouseEvent, id: string) => {
-    e.preventDefault();
-    setContextMenu({ id, x: e.clientX, y: e.clientY });
+  const MENU_W = 176; // w-44
+  const MENU_H = 132; // 3 rows + padding
+
+  /** Clamp to the viewport so the menu never opens off-screen. */
+  const openMenu = (id: string, x: number, y: number) => {
+    setContextMenu({
+      id,
+      x: Math.min(x, window.innerWidth - MENU_W - 8),
+      y: Math.min(y, window.innerHeight - MENU_H - 8),
+    });
   };
 
   return (
@@ -194,7 +243,7 @@ export default function ScheduleTabs() {
                 handleRename={handleRename}
                 setRenamingId={setRenamingId}
                 setActiveSchedule={setActiveSchedule}
-                handleContextMenu={handleContextMenu}
+                openMenu={openMenu}
               />
             ))}
           </SortableContext>
@@ -248,7 +297,8 @@ export default function ScheduleTabs() {
           {schedules.length > 1 && (
             <button
               onClick={() => {
-                deleteSchedule(contextMenu.id);
+                const s = schedules.find((s) => s.id === contextMenu.id);
+                if (s) setPendingDelete(s);
                 setContextMenu(null);
               }}
               className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-destructive rounded-sm
@@ -260,6 +310,46 @@ export default function ScheduleTabs() {
           )}
         </div>
       )}
+
+      {/* Delete confirmation — deleting a schedule destroys every task in it. */}
+      <Modal
+        open={pendingDelete !== null}
+        onClose={() => setPendingDelete(null)}
+        title="Delete schedule?"
+        maxWidth="max-w-sm"
+      >
+        {pendingDelete && (
+          <div className="space-y-6">
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              <span className="font-medium text-foreground">{pendingDelete.name}</span>
+              {pendingDelete.tasks.length > 0 ? (
+                <>
+                  {" "}and its {pendingDelete.tasks.length}{" "}
+                  {pendingDelete.tasks.length === 1 ? "task" : "tasks"} will be deleted.
+                </>
+              ) : (
+                <> will be deleted.</>
+              )}{" "}
+              This cannot be undone.
+            </p>
+            <div className="flex justify-end gap-2">
+              <Button variant="ghost" onClick={() => setPendingDelete(null)}>
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  deleteSchedule(pendingDelete.id);
+                  setPendingDelete(null);
+                }}
+              >
+                <Trash2 className="h-4 w-4 mr-1.5" />
+                Delete
+              </Button>
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 }
