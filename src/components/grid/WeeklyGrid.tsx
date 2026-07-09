@@ -287,6 +287,7 @@ function DayColumn({
           height={ROW_HEIGHT}
           onClick={() => onCellClick?.(day, time)}
           readOnly={readOnly}
+          label={`${DAY_SHORT_LABELS[day]} ${formatTimeDisplay(time, clockFormat)}`}
         />
       ))}
 
@@ -323,21 +324,33 @@ interface DroppableCellProps {
   height: number;
   onClick: () => void;
   readOnly: boolean;
+  label: string;
 }
 
-function DroppableCell({ id, height, onClick, readOnly }: DroppableCellProps) {
+function DroppableCell({ id, height, onClick, readOnly, label }: DroppableCellProps) {
   const { setNodeRef, isOver } = useDroppable({ id });
 
+  // Read-only grids have nothing to activate, so they stay out of the tab order.
+  if (readOnly) {
+    return (
+      <div
+        ref={setNodeRef}
+        className="border-b border-border/60"
+        style={{ height }}
+      />
+    );
+  }
+
   return (
-    <div
+    <button
       ref={setNodeRef}
-      className={`border-b border-border/60 transition-colors duration-200
-        ${!readOnly ? "cursor-pointer hover:bg-primary/5" : ""}
+      type="button"
+      aria-label={`Add task — ${label}`}
+      onClick={onClick}
+      className={`block w-full border-b border-border/60 transition-colors duration-200
+        cursor-pointer hover:bg-primary/5 focus-visible:bg-primary/10
         ${isOver ? "bg-primary/10" : ""}`}
       style={{ height }}
-      onClick={() => {
-        if (!readOnly) onClick();
-      }}
     />
   );
 }

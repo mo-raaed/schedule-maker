@@ -49,23 +49,23 @@ export default function DataModal({ open, onClose }: DataModalProps) {
         }
 
         const newId = createSchedule(data.name);
+        setActiveSchedule(newId);
 
-        if (data.settings) {
-          setActiveSchedule(newId);
-          setTimeout(() => {
-            updateSettings(data.settings);
-            for (const task of data.tasks) {
-              addTask({
-                name: task.name,
-                description: task.description,
-                color: task.color,
-                days: task.days,
-                startTime: task.startTime,
-                endTime: task.endTime,
-              });
-            }
-          }, 0);
-        }
+        // Tasks import regardless of whether the file carries settings —
+        // gating them on `data.settings` silently dropped every task.
+        setTimeout(() => {
+          if (data.settings) updateSettings(data.settings);
+          for (const task of data.tasks) {
+            addTask({
+              name: task.name,
+              description: task.description,
+              color: task.color,
+              days: task.days,
+              startTime: task.startTime,
+              endTime: task.endTime,
+            });
+          }
+        }, 0);
 
         onClose();
       } catch (err: any) {
@@ -98,15 +98,18 @@ export default function DataModal({ open, onClose }: DataModalProps) {
         </button>
 
         {/* Import JSON */}
+        {/* sr-only, not `hidden` — display:none removes the input from the
+            tab order, making import unreachable by keyboard. */}
         <label className="block">
           <input
             type="file"
             accept=".json"
             onChange={handleImportJson}
-            className="hidden"
+            className="sr-only peer"
           />
           <div className="w-full flex items-center gap-3 p-4 rounded-md
             bg-surface-2 hover:bg-surface
+            peer-focus-visible:ring-2 peer-focus-visible:ring-ring/70 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-surface
             transition-all duration-200 cursor-pointer active:scale-[0.98] text-left">
             <div className="h-10 w-10 rounded-md bg-surface-3 flex items-center justify-center shrink-0">
               <Upload className="h-5 w-5 text-muted-foreground" />

@@ -42,9 +42,20 @@ export default function TaskBlock({
       ref={setNodeRef}
       {...listeners}
       {...attributes}
+      aria-label={`${task.name}, ${formatTimeDisplay(task.startTime, clockFormat)} to ${formatTimeDisplay(task.endTime, clockFormat)}. Edit task.`}
       onClick={(e) => {
         e.stopPropagation();
         onClick();
+      }}
+      // dnd-kit sets role="button" + tabIndex=0, but a <div> does not fire
+      // click from Enter/Space the way a real button does.
+      onKeyDown={(e) => {
+        if (readOnly) return;
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          e.stopPropagation();
+          onClick();
+        }
       }}
       className={`absolute left-1 right-1 rounded-md overflow-hidden cursor-pointer
         select-none transition-shadow duration-200
