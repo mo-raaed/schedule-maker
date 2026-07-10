@@ -124,12 +124,14 @@ export const useScheduleStore = create<ScheduleState>()(
           const newIndex = state.schedules.findIndex((s) => s.id === overId);
           if (oldIndex === -1 || newIndex === -1) return state;
 
+          const now = Date.now();
           const newSchedules = arrayMove(state.schedules, oldIndex, newIndex);
-          const updated = newSchedules.map((s, idx) => ({
-            ...s,
-            order: idx,
-            updatedAt: Date.now()
-          }));
+          // Only touch `updatedAt` where `order` actually moved. The Convex
+          // write-through diffs on `updatedAt` and pushes a whole document per
+          // change, so bumping every schedule fanned one drag into N writes.
+          const updated = newSchedules.map((s, idx) =>
+            s.order === idx ? s : { ...s, order: idx, updatedAt: now }
+          );
           return { schedules: updated };
         });
       },

@@ -1,5 +1,3 @@
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
 import type { Schedule } from "./types";
 import { getVisibleDays, generateTimeSlots, formatTime12h, timeToMinutes } from "./time";
 import { getTaskColors } from "./colors";
@@ -171,6 +169,13 @@ function buildExportDOM(options: ExportOptions): HTMLDivElement {
  * Export the schedule as PNG or PDF.
  */
 export async function exportSchedule(options: ExportOptions): Promise<void> {
+  // Loaded on demand: html2canvas + jspdf are ~1.1MB and only ever needed
+  // once the user actually asks for a file.
+  const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
+    import("html2canvas"),
+    import("jspdf"),
+  ]);
+
   const el = buildExportDOM(options);
   document.body.appendChild(el);
 

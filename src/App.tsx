@@ -11,6 +11,7 @@ import ScheduleBuilder from "./ScheduleBuilder";
 import { useAppSettingsStore } from "./store/scheduleStore";
 import SharedScheduleView from "./SharedScheduleView";
 import { useConvexSync } from "./hooks/useConvexSync";
+import CursorGlow from "./components/CursorGlow";
 
 export default function App() {
   const darkMode = useAppSettingsStore((s) => s.darkMode);
@@ -30,10 +31,13 @@ export default function App() {
   return (
     <LazyMotion features={() => import("./motionFeatures").then(m => m.default)} strict>
       <MotionConfig reducedMotion="user">
+        {/* Body carries bg-background; wrappers stay transparent so the
+            fixed CursorGlow (-z-10) can read through as ambient light. */}
+        <CursorGlow />
         {shareId ? (
           <SharedScheduleView shareId={shareId} />
         ) : (
-          <div className="min-h-screen bg-background text-foreground">
+          <div className="min-h-screen text-foreground">
             <Authenticated>
               <AuthenticatedApp />
             </Authenticated>
@@ -62,9 +66,9 @@ function AuthenticatedApp() {
     void upsertUser().then(() => setUserReady(true));
   }, [upsertUser]);
 
-  useConvexSync(userReady);
+  const { synced } = useConvexSync(userReady);
 
-  return <ScheduleBuilder />;
+  return <ScheduleBuilder ready={userReady && synced} />;
 }
 
 const heroEase = [0.22, 1, 0.36, 1] as const;
@@ -79,6 +83,7 @@ function LandingPage({ onGuestMode }: { onGuestMode: () => void }) {
       <div className="flex items-center justify-end px-6 pt-5">
         <button
           onClick={toggleDarkMode}
+          aria-label={darkMode ? "Switch to light theme" : "Switch to dark theme"}
           className="p-2.5 rounded-full hover:bg-surface-2 transition-all duration-200 text-muted-foreground hover:text-foreground cursor-pointer active:scale-[0.98]"
           title="Toggle Dark Mode"
         >
@@ -134,8 +139,8 @@ function LandingPage({ onGuestMode }: { onGuestMode: () => void }) {
               },
               {
                 icon: <FileDown className="h-6 w-6" />,
-                title: "Flawless Export",
-                desc: "Download your schedule as a high-resolution PDF or PNG",
+                title: "Export",
+                desc: "Download your schedule as a 2x-resolution PDF or PNG",
               },
             ].map((f, i) => (
               <m.div
@@ -143,9 +148,10 @@ function LandingPage({ onGuestMode }: { onGuestMode: () => void }) {
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: heroEase, delay: 0.16 + i * 0.08 }}
-                className="p-6 rounded-lg bg-surface border border-border shadow-card hover-lift text-left"
+                className="group p-6 rounded-lg bg-surface border border-border shadow-card hover-lift text-left"
               >
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-md bg-surface-2 mb-3 text-primary">
+                <div className="inline-flex items-center justify-center w-10 h-10 rounded-md bg-surface-2 mb-3 text-primary
+                  transition-transform duration-200 ease-out can-hover:group-hover:scale-110">
                   {f.icon}
                 </div>
                 <h3 className="font-display font-semibold mb-1 text-foreground">{f.title}</h3>
@@ -164,7 +170,8 @@ function LandingPage({ onGuestMode }: { onGuestMode: () => void }) {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto">
               <SignInButton mode="modal">
                 <button className="w-full sm:w-auto min-w-[200px] px-8 py-4 rounded-full bg-primary-solid text-white
-                  font-semibold hover:brightness-110 transition-all duration-200 shadow-card
+                  font-semibold hover:brightness-110 transition-all duration-200
+                  glow-primary can-hover:hover:glow-primary-strong can-hover:hover:-translate-y-px
                   cursor-pointer flex items-center justify-center gap-2 active:scale-[0.98]">
                   Sign In to Save
                 </button>

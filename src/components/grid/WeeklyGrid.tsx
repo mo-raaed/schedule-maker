@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { CalendarDays } from "lucide-react";
 import {
   DndContext,
   type DragEndEvent,
@@ -140,13 +141,21 @@ export default function WeeklyGrid({
         ref={gridRef}
         className="overflow-auto bg-surface rounded-lg border border-border shadow-card relative flex-1 min-h-0"
       >
-        {/* Empty state */}
-        {tasks.length === 0 && !readOnly && (
-          <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+        {/* Empty state — a shared schedule with no tasks needs one too. */}
+        {tasks.length === 0 && (
+          <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none animate-fade-in">
             <div className="text-center opacity-60">
-              <div className="text-4xl mb-3">📅</div>
-              <p className="text-sm font-medium text-muted-foreground">No tasks yet</p>
-              <p className="text-xs text-muted-foreground mt-1">Click a cell or press <kbd className="px-1.5 py-0.5 bg-surface-2 border border-border rounded-sm font-mono text-[10px]">N</kbd> to add one</p>
+              <CalendarDays className="h-9 w-9 mx-auto mb-3 text-muted-foreground" />
+              <p className="text-sm font-medium text-muted-foreground">
+                {readOnly ? "This schedule is empty" : "No tasks yet"}
+              </p>
+              {!readOnly && (
+                <p className="text-xs text-muted-foreground mt-1">
+                  Click a cell or press{" "}
+                  <kbd className="px-1.5 py-0.5 bg-surface-2 border border-border rounded-sm font-mono text-[10px]">N</kbd>{" "}
+                  to add one
+                </p>
+              )}
             </div>
           </div>
         )}
@@ -287,6 +296,7 @@ function DayColumn({
           height={ROW_HEIGHT}
           onClick={() => onCellClick?.(day, time)}
           readOnly={readOnly}
+          label={`${DAY_SHORT_LABELS[day]} ${formatTimeDisplay(time, clockFormat)}`}
         />
       ))}
 
@@ -323,21 +333,33 @@ interface DroppableCellProps {
   height: number;
   onClick: () => void;
   readOnly: boolean;
+  label: string;
 }
 
-function DroppableCell({ id, height, onClick, readOnly }: DroppableCellProps) {
+function DroppableCell({ id, height, onClick, readOnly, label }: DroppableCellProps) {
   const { setNodeRef, isOver } = useDroppable({ id });
 
+  // Read-only grids have nothing to activate, so they stay out of the tab order.
+  if (readOnly) {
+    return (
+      <div
+        ref={setNodeRef}
+        className="border-b border-border/60"
+        style={{ height }}
+      />
+    );
+  }
+
   return (
-    <div
+    <button
       ref={setNodeRef}
-      className={`border-b border-border/60 transition-colors duration-200
-        ${!readOnly ? "cursor-pointer hover:bg-primary/5" : ""}
+      type="button"
+      aria-label={`Add task — ${label}`}
+      onClick={onClick}
+      className={`block w-full border-b border-border/60 transition-colors duration-200
+        cursor-pointer hover:bg-primary/5 focus-visible:bg-primary/10
         ${isOver ? "bg-primary/10" : ""}`}
       style={{ height }}
-      onClick={() => {
-        if (!readOnly) onClick();
-      }}
     />
   );
 }

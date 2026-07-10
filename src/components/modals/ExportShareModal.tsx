@@ -35,6 +35,9 @@ export default function ExportShareModal({ open, onClose }: ExportShareModalProp
   const [subtitle, setSubtitle] = useState("");
   const [exporting, setExporting] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
+  const [exportDone, setExportDone] = useState(false);
+  const [shareError, setShareError] = useState<string | null>(null);
 
   // Convex mutation (only works when authenticated)
   let togglePublicMutation: any = null;
@@ -52,6 +55,8 @@ export default function ExportShareModal({ open, onClose }: ExportShareModalProp
 
   const handleExport = async () => {
     setExporting(true);
+    setExportError(null);
+    setExportDone(false);
     try {
       await exportSchedule({
         format,
@@ -61,8 +66,12 @@ export default function ExportShareModal({ open, onClose }: ExportShareModalProp
         schedule,
         paletteMode,
       });
+      setExportDone(true);
+      setTimeout(() => setExportDone(false), 3000);
     } catch (err) {
-      console.error("Export failed:", err);
+      setExportError(
+        err instanceof Error ? err.message : "Export failed. Please try again."
+      );
     } finally {
       setExporting(false);
     }
@@ -70,6 +79,7 @@ export default function ExportShareModal({ open, onClose }: ExportShareModalProp
 
   const handleToggleShare = async () => {
     if (!schedule.convexId || !togglePublicMutation) return;
+    setShareError(null);
     try {
       const result = await togglePublicMutation({
         scheduleId: schedule.convexId as any,
@@ -82,15 +92,23 @@ export default function ExportShareModal({ open, onClose }: ExportShareModalProp
         setPublic(schedule.id, false);
       }
     } catch (err) {
-      console.error("Failed to toggle sharing:", err);
+      setShareError(
+        err instanceof Error ? err.message : "Could not update sharing. Please try again."
+      );
     }
   };
 
   const handleCopy = async () => {
     if (!shareUrl) return;
-    await navigator.clipboard.writeText(shareUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setShareError(null);
+    try {
+      // Rejects on insecure origins and when the permission is denied.
+      await navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setShareError("Could not copy. Select the link and copy it manually.");
+    }
   };
 
   return (
@@ -190,6 +208,18 @@ export default function ExportShareModal({ open, onClose }: ExportShareModalProp
               </>
             )}
           </Button>
+
+          {exportError && (
+            <p role="alert" className="text-sm text-destructive px-1">
+              {exportError}
+            </p>
+          )}
+          {exportDone && !exportError && (
+            <p role="status" className="flex items-center gap-1.5 text-sm text-primary px-1">
+              <Check className="h-4 w-4 shrink-0" />
+              {format.toUpperCase()} downloaded.
+            </p>
+          )}
         </div>
 
         {/* Spacing instead of divider */}
@@ -204,7 +234,7 @@ export default function ExportShareModal({ open, onClose }: ExportShareModalProp
           {/* Status */}
           <div className="flex items-center gap-3 p-3 rounded-md bg-surface">
             {schedule.isPublic ? (
-              <Globe className="h-5 w-5 text-green-500 shrink-0" />
+              <Globe className="h-5 w-5 text-primary shrink-0" />
             ) : (
               <GlobeLock className="h-5 w-5 text-muted-foreground shrink-0" />
             )}
@@ -231,11 +261,17 @@ export default function ExportShareModal({ open, onClose }: ExportShareModalProp
                 {shareUrl}
               </span>
               {copied ? (
-                <Check className="h-4 w-4 text-green-500 shrink-0" />
+                <Check className="h-4 w-4 text-primary shrink-0" />
               ) : (
                 <Copy className="h-4 w-4 text-muted-foreground group-hover:text-foreground shrink-0" />
               )}
             </button>
+          )}
+
+          {shareError && (
+            <p role="alert" className="text-sm text-destructive px-1">
+              {shareError}
+            </p>
           )}
 
           {/* Toggle */}

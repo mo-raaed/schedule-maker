@@ -2,11 +2,17 @@ import type { PaletteMode } from "./types";
 
 export interface ColorOption {
   name: string;
+  /** Canonical stored ID for a task's colour. Persisted in localStorage and
+   *  Convex — never change these values, or existing tasks stop resolving. */
   pastel: string;
   bold: string;
   /** Dark text color for pastel bg, light text for bold bg */
   pastelText: string;
   boldText: string;
+  /** Rendered fill for bold mode. Darker than the `bold` ID so that white
+   *  label text clears WCAG AA (4.5:1) at the 10–12px used on task blocks;
+   *  the 500-weight `bold` hex only reached 2.15:1–4.47:1. */
+  boldFill: string;
   /** Darker accent for left border */
   pastelBorder: string;
   boldBorder: string;
@@ -14,7 +20,7 @@ export interface ColorOption {
   darkPastel: string;
   darkPastelText: string;
   darkPastelBorder: string;
-  darkBold: string;
+  darkBoldFill: string;
   darkBoldText: string;
   darkBoldBorder: string;
 }
@@ -26,14 +32,15 @@ export const COLOR_PALETTE: ColorOption[] = [
     bold: "#3B82F6",
     pastelText: "#1E40AF",
     boldText: "#FFFFFF",
+    boldFill: "#1D4ED8",
     pastelBorder: "#93C5FD",
-    boldBorder: "#1D4ED8",
+    boldBorder: "#1E40AF",
     darkPastel: "#1E3A5F",
     darkPastelText: "#93C5FD",
     darkPastelBorder: "#2563EB",
-    darkBold: "#2563EB",
-    darkBoldText: "#DBEAFE",
-    darkBoldBorder: "#1D4ED8",
+    darkBoldFill: "#1D4ED8",
+    darkBoldText: "#FFFFFF",
+    darkBoldBorder: "#1E40AF",
   },
   {
     name: "Purple",
@@ -41,14 +48,15 @@ export const COLOR_PALETTE: ColorOption[] = [
     bold: "#8B5CF6",
     pastelText: "#5B21B6",
     boldText: "#FFFFFF",
+    boldFill: "#6D28D9",
     pastelBorder: "#C4B5FD",
-    boldBorder: "#6D28D9",
+    boldBorder: "#5B21B6",
     darkPastel: "#2E1065",
     darkPastelText: "#C4B5FD",
     darkPastelBorder: "#7C3AED",
-    darkBold: "#7C3AED",
-    darkBoldText: "#EDE9FE",
-    darkBoldBorder: "#6D28D9",
+    darkBoldFill: "#6D28D9",
+    darkBoldText: "#FFFFFF",
+    darkBoldBorder: "#5B21B6",
   },
   {
     name: "Rose",
@@ -56,14 +64,15 @@ export const COLOR_PALETTE: ColorOption[] = [
     bold: "#F43F5E",
     pastelText: "#9F1239",
     boldText: "#FFFFFF",
+    boldFill: "#BE123C",
     pastelBorder: "#FDA4AF",
-    boldBorder: "#BE123C",
+    boldBorder: "#9F1239",
     darkPastel: "#4C0519",
     darkPastelText: "#FDA4AF",
     darkPastelBorder: "#E11D48",
-    darkBold: "#E11D48",
-    darkBoldText: "#FFE4E6",
-    darkBoldBorder: "#BE123C",
+    darkBoldFill: "#BE123C",
+    darkBoldText: "#FFFFFF",
+    darkBoldBorder: "#9F1239",
   },
   {
     name: "Orange",
@@ -71,14 +80,15 @@ export const COLOR_PALETTE: ColorOption[] = [
     bold: "#F97316",
     pastelText: "#9A3412",
     boldText: "#FFFFFF",
+    boldFill: "#C2410C",
     pastelBorder: "#FDBA74",
-    boldBorder: "#C2410C",
+    boldBorder: "#9A3412",
     darkPastel: "#431407",
     darkPastelText: "#FDBA74",
     darkPastelBorder: "#EA580C",
-    darkBold: "#EA580C",
-    darkBoldText: "#FFEDD5",
-    darkBoldBorder: "#C2410C",
+    darkBoldFill: "#C2410C",
+    darkBoldText: "#FFFFFF",
+    darkBoldBorder: "#9A3412",
   },
   {
     name: "Amber",
@@ -86,14 +96,15 @@ export const COLOR_PALETTE: ColorOption[] = [
     bold: "#F59E0B",
     pastelText: "#92400E",
     boldText: "#FFFFFF",
+    boldFill: "#B45309",
     pastelBorder: "#FCD34D",
-    boldBorder: "#B45309",
+    boldBorder: "#92400E",
     darkPastel: "#451A03",
     darkPastelText: "#FCD34D",
     darkPastelBorder: "#D97706",
-    darkBold: "#D97706",
-    darkBoldText: "#FEF3C7",
-    darkBoldBorder: "#B45309",
+    darkBoldFill: "#B45309",
+    darkBoldText: "#FFFFFF",
+    darkBoldBorder: "#92400E",
   },
   {
     name: "Green",
@@ -101,14 +112,15 @@ export const COLOR_PALETTE: ColorOption[] = [
     bold: "#22C55E",
     pastelText: "#166534",
     boldText: "#FFFFFF",
+    boldFill: "#15803D",
     pastelBorder: "#86EFAC",
-    boldBorder: "#15803D",
+    boldBorder: "#166534",
     darkPastel: "#052E16",
     darkPastelText: "#86EFAC",
     darkPastelBorder: "#16A34A",
-    darkBold: "#16A34A",
-    darkBoldText: "#DCFCE7",
-    darkBoldBorder: "#15803D",
+    darkBoldFill: "#15803D",
+    darkBoldText: "#FFFFFF",
+    darkBoldBorder: "#166534",
   },
   {
     name: "Teal",
@@ -116,14 +128,15 @@ export const COLOR_PALETTE: ColorOption[] = [
     bold: "#14B8A6",
     pastelText: "#115E59",
     boldText: "#FFFFFF",
+    boldFill: "#0F766E",
     pastelBorder: "#5EEAD4",
-    boldBorder: "#0D9488",
+    boldBorder: "#115E59",
     darkPastel: "#042F2E",
     darkPastelText: "#5EEAD4",
     darkPastelBorder: "#0D9488",
-    darkBold: "#0D9488",
-    darkBoldText: "#CCFBF1",
-    darkBoldBorder: "#0F766E",
+    darkBoldFill: "#0F766E",
+    darkBoldText: "#FFFFFF",
+    darkBoldBorder: "#115E59",
   },
   {
     name: "Cyan",
@@ -131,14 +144,15 @@ export const COLOR_PALETTE: ColorOption[] = [
     bold: "#06B6D4",
     pastelText: "#155E75",
     boldText: "#FFFFFF",
+    boldFill: "#0E7490",
     pastelBorder: "#67E8F9",
-    boldBorder: "#0891B2",
+    boldBorder: "#155E75",
     darkPastel: "#083344",
     darkPastelText: "#67E8F9",
     darkPastelBorder: "#0891B2",
-    darkBold: "#0891B2",
-    darkBoldText: "#CFFAFE",
-    darkBoldBorder: "#0E7490",
+    darkBoldFill: "#0E7490",
+    darkBoldText: "#FFFFFF",
+    darkBoldBorder: "#155E75",
   },
   {
     name: "Indigo",
@@ -146,14 +160,15 @@ export const COLOR_PALETTE: ColorOption[] = [
     bold: "#6366F1",
     pastelText: "#3730A3",
     boldText: "#FFFFFF",
+    boldFill: "#4338CA",
     pastelBorder: "#A5B4FC",
-    boldBorder: "#4338CA",
+    boldBorder: "#3730A3",
     darkPastel: "#1E1B4B",
     darkPastelText: "#A5B4FC",
     darkPastelBorder: "#4F46E5",
-    darkBold: "#4F46E5",
-    darkBoldText: "#E0E7FF",
-    darkBoldBorder: "#4338CA",
+    darkBoldFill: "#4338CA",
+    darkBoldText: "#FFFFFF",
+    darkBoldBorder: "#3730A3",
   },
   {
     name: "Pink",
@@ -161,14 +176,15 @@ export const COLOR_PALETTE: ColorOption[] = [
     bold: "#EC4899",
     pastelText: "#9D174D",
     boldText: "#FFFFFF",
+    boldFill: "#BE185D",
     pastelBorder: "#F9A8D4",
-    boldBorder: "#BE185D",
+    boldBorder: "#9D174D",
     darkPastel: "#500724",
     darkPastelText: "#F9A8D4",
     darkPastelBorder: "#DB2777",
-    darkBold: "#DB2777",
-    darkBoldText: "#FCE7F3",
-    darkBoldBorder: "#BE185D",
+    darkBoldFill: "#BE185D",
+    darkBoldText: "#FFFFFF",
+    darkBoldBorder: "#9D174D",
   },
 ];
 
@@ -201,9 +217,9 @@ export function getTaskColors(
     return { bg: option.pastel, text: option.pastelText, border: option.pastelBorder };
   }
   if (isDarkMode) {
-    return { bg: option.darkBold, text: option.darkBoldText, border: option.darkBoldBorder };
+    return { bg: option.darkBoldFill, text: option.darkBoldText, border: option.darkBoldBorder };
   }
-  return { bg: option.bold, text: option.boldText, border: option.boldBorder };
+  return { bg: option.boldFill, text: option.boldText, border: option.boldBorder };
 }
 
 /**

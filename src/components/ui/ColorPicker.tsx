@@ -23,13 +23,15 @@ export default function ColorPicker({ value, onChange, paletteMode }: ColorPicke
         {COLOR_PALETTE.map((color) => {
           // Store the light-mode hex as the value (canonical ID)
           const hex = paletteMode === "pastel" ? color.pastel : color.bold;
-          // Show the dark-mode preview swatch when in dark mode
+          // Preview the fill that will actually render, not the stored ID.
           const displayHex =
             isDarkMode
               ? paletteMode === "pastel"
                 ? color.darkPastel
-                : color.darkBold
-              : hex;
+                : color.darkBoldFill
+              : paletteMode === "pastel"
+                ? color.pastel
+                : color.boldFill;
           const checkColor =
             isDarkMode
               ? paletteMode === "pastel"
