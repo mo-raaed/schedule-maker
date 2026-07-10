@@ -22,7 +22,7 @@ export default function RightToolbar({
   onShortcuts,
 }: RightToolbarProps) {
   return (
-    <aside className="hidden md:flex flex-col w-52 shrink-0 bg-background border-l border-border p-3 gap-1 overflow-y-auto">
+    <aside className="hidden md:flex flex-col w-52 shrink-0  border-l border-border p-3 gap-1 overflow-y-auto">
       {/* Primary action */}
       <ToolbarButton
         icon={<Plus className="h-4 w-4" />}
@@ -78,7 +78,7 @@ function ToolbarButton({ icon, label, onClick, primary }: ToolbarButtonProps) {
         onClick={onClick}
         className="flex items-center gap-2.5 px-4 py-2.5 rounded-full
           bg-primary-solid text-white font-semibold text-sm
-          shadow-card hover:brightness-110
+          glow-primary can-hover:hover:glow-primary-strong can-hover:hover:-translate-y-px hover:brightness-110
           transition-all duration-200 cursor-pointer active:scale-[0.98]"
       >
         {icon}

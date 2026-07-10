@@ -143,7 +143,7 @@ export default function WeeklyGrid({
       >
         {/* Empty state — a shared schedule with no tasks needs one too. */}
         {tasks.length === 0 && (
-          <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+          <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none animate-fade-in">
             <div className="text-center opacity-60">
               <CalendarDays className="h-9 w-9 mx-auto mb-3 text-muted-foreground" />
               <p className="text-sm font-medium text-muted-foreground">

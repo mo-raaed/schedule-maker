@@ -20,7 +20,7 @@ export default function SharedScheduleView({ shareId }: SharedScheduleViewProps)
 
   if (result === undefined) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
@@ -28,7 +28,7 @@ export default function SharedScheduleView({ shareId }: SharedScheduleViewProps)
 
   if (result === null) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background text-center px-4">
+      <div className="min-h-screen flex items-center justify-center  text-center px-4">
         <div>
           <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
           <h1 className="font-display text-2xl font-bold mb-2">Schedule Not Found</h1>
@@ -73,7 +73,7 @@ export default function SharedScheduleView({ shareId }: SharedScheduleViewProps)
   };
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-background text-foreground">
+    <div className="h-screen flex flex-col overflow-hidden text-foreground">
       {/* Header */}
       <header className="shrink-0 flex items-center justify-between px-4 h-14 glass">
         <div className="flex items-center gap-3">

@@ -58,7 +58,7 @@ export default function TaskBlock({
         }
       }}
       className={`absolute left-1 right-1 rounded-md overflow-hidden cursor-pointer
-        select-none transition-shadow duration-200
+        select-none transition-shadow duration-200 animate-scale-in
         ${isDragging ? "opacity-40" : "shadow-soft hover:shadow-card-lg"}
         ${isOverlapping ? "ring-2 ring-destructive/60" : ""}`}
       style={{

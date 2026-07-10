@@ -101,7 +101,7 @@ export default function ScheduleBuilder({ ready = true }: ScheduleBuilderProps) 
       <div
         role="status"
         aria-label="Loading your schedules"
-        className="h-screen flex items-center justify-center bg-background"
+        className="h-screen flex items-center justify-center"
       >
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
@@ -109,7 +109,7 @@ export default function ScheduleBuilder({ ready = true }: ScheduleBuilderProps) 
   }
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-background">
+    <div className="h-screen flex flex-col overflow-hidden">
       {/* ── Header ── */}
       <header className="shrink-0 flex items-center justify-between px-4 h-14 glass sticky top-0 z-30">
         {/* Left — Logo */}

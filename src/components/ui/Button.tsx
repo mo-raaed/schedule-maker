@@ -9,8 +9,10 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantClasses: Record<Variant, string> = {
+  // Glow is static coloured light (no pulse); it deepens and the button
+  // lifts 1px on hover-capable pointers only.
   primary:
-    "bg-primary-solid text-white font-semibold hover:brightness-110 shadow-card",
+    "bg-primary-solid text-white font-semibold hover:brightness-110 glow-primary can-hover:hover:glow-primary-strong can-hover:hover:-translate-y-px",
   secondary:
     "bg-transparent text-primary border border-border hover:bg-surface-2",
   ghost:
