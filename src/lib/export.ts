@@ -3,6 +3,7 @@ import { getVisibleDays, generateTimeSlots, formatTime12h, timeToMinutes } from 
 import { getTaskColors } from "./colors";
 import { DAY_SHORT_LABELS } from "./types";
 import type { PaletteMode } from "./types";
+import { saveFile } from "./download";
 
 export type ExportFormat = "pdf" | "png";
 export type ExportOrientation = "portrait" | "landscape";
@@ -187,11 +188,16 @@ export async function exportSchedule(options: ExportOptions): Promise<void> {
       useCORS: true,
     });
 
+    const baseName = options.schedule.name.replace(/[^a-zA-Z0-9]/g, "_");
+
     if (options.format === "png") {
-      const link = document.createElement("a");
-      link.download = `${options.schedule.name.replace(/[^a-zA-Z0-9]/g, "_")}.png`;
-      link.href = canvas.toDataURL("image/png");
-      link.click();
+      const blob = await new Promise<Blob>((resolve, reject) =>
+        canvas.toBlob(
+          (b) => (b ? resolve(b) : reject(new Error("Could not render the image."))),
+          "image/png"
+        )
+      );
+      await saveFile(blob, `${baseName}.png`);
     } else {
       const isLandscape = options.orientation === "landscape";
       const pdf = new jsPDF({
@@ -201,7 +207,7 @@ export async function exportSchedule(options: ExportOptions): Promise<void> {
       });
       const imgData = canvas.toDataURL("image/png");
       pdf.addImage(imgData, "PNG", 0, 0, canvas.width / 2, canvas.height / 2);
-      pdf.save(`${options.schedule.name.replace(/[^a-zA-Z0-9]/g, "_")}.pdf`);
+      await saveFile(pdf.output("blob"), `${baseName}.pdf`);
     }
   } finally {
     document.body.removeChild(el);
