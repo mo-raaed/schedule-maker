@@ -29,3 +29,6 @@ graphify-out/
 # Playwright
 test-results/
 playwright-report/
+
+# Claude Code local caches
+.claude/council-cache/
