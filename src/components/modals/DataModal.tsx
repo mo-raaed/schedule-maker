@@ -2,6 +2,7 @@ import { useState } from "react";
 import Modal from "../ui/Modal";
 import { useScheduleStore } from "../../store/scheduleStore";
 import { Download, Upload } from "lucide-react";
+import { saveFile } from "../../lib/download";
 
 interface DataModalProps {
   open: boolean;
@@ -26,12 +27,7 @@ export default function DataModal({ open, onClose }: DataModalProps) {
       version: 1,
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.download = `${schedule.name.replace(/[^a-zA-Z0-9]/g, "_")}.json`;
-    link.href = url;
-    link.click();
-    URL.revokeObjectURL(url);
+    void saveFile(blob, `${schedule.name.replace(/[^a-zA-Z0-9]/g, "_")}.json`);
   };
 
   const handleImportJson = (e: React.ChangeEvent<HTMLInputElement>) => {
