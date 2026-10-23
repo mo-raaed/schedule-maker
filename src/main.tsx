@@ -43,6 +43,11 @@ function Root() {
           formFieldSuccessText: "text-primary font-sans",
           formFieldErrorText: "text-destructive font-sans",
           socialButtonsBlockButton: "bg-surface-2 hover:bg-surface-3 border border-border text-foreground font-medium font-sans active:scale-[0.98] transition-all duration-200",
+          // Clerk's own styles outrank Tailwind's layered utilities, so the
+          // label colour has to be set as a style object to stick.
+          socialButtonsBlockButtonText: {
+            color: darkMode ? "#ECE9F0" : "#131C30",
+          },
         }
       }}
     >
